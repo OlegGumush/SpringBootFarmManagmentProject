@@ -7,7 +7,7 @@ import farm.enums.AnimalSex;
 import farm.enums.AnimalType;
 
 @Entity
-@DiscriminatorValue(value = AnimalType.Cow)
+@DiscriminatorValue(value = AnimalType.COW)
 public class Cow extends Animal {
 
 	public Cow() {

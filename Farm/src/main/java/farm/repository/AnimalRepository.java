@@ -5,7 +5,6 @@ import java.util.List;
 import org.springframework.stereotype.Repository;
 
 import farm.entity.Animal;
-import farm.entity.BaseEntity;
 import farm.enums.AnimalSex;
 import farm.repository.query.Filter;
 import farm.repository.query.SearchParams;
@@ -32,8 +31,7 @@ public class AnimalRepository extends BaseRepository<Animal>  {
 		return findAll(page, size, sp);
 	}
 
-	// not good name
-	public boolean isAnimalExistsByName(String name, long id) {
+	public boolean isAnimalExistsByNameExceptId(String name, long id) {
 		
 		SearchParams sp = new SearchParams()
 							.where(Filter.equal("animalName", name))

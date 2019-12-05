@@ -131,11 +131,16 @@ public class AnimalBL {
 		return (ArrayList<Animal>) animalRepository.findAllBulls(page, size);
 	}
 	
-	public boolean isAnimalExistsByName(String animalName, long id) {
+	public boolean isAnimalExistsByNameExceptId(String animalName, long id) {
 		
-		return animalRepository.isAnimalExistsByName(animalName, id);
+		return animalRepository.isAnimalExistsByNameExceptId(animalName, id);
 	}
 	
+	public boolean isAnimalExistsByName(String animalName) {
+		
+		return animalRepository.isAnimalExistsByNameExceptId(animalName, 0);
+	}
+
 	private void setUpdateCommonFields(AnimalModel animalModel, Animal animal) {
 		
 		animal.setAnimalName(animalModel.AnimalName);
@@ -145,7 +150,6 @@ public class AnimalBL {
 
 		animal.setAnimalName(animalModel.AnimalName);
 	}
-
 
 }
 
