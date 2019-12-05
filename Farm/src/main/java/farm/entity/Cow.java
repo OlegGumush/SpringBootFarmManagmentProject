@@ -10,17 +10,7 @@ import farm.enums.AnimalType;
 @DiscriminatorValue(value = AnimalType.Cow)
 public class Cow extends Animal {
 
-	private boolean isPregnant;
-
 	public Cow() {
 		super(AnimalSex.Female);
-	}
-	
-	public boolean isPregnant() {
-		return isPregnant;
-	}
-
-	public void setPregnant(boolean isPregnant) {
-		this.isPregnant = isPregnant;
 	}
 }
