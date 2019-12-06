@@ -23,25 +23,33 @@ public class CowController {
 	@RequestMapping(value = "/cows", method = RequestMethod.POST)
 	public ResponseEntity<FarmResult> createBull(@RequestBody CowModel cowModel) {
 		
-		FarmResult result = animalsBL.createCow(cowModel);
-		 
-		if (result.isSucceeded()) {
-			return new ResponseEntity<FarmResult>(result, HttpStatus.CREATED);
+		try {
+			FarmResult result = animalsBL.createCow(cowModel);
+			 
+			if (result.isSucceeded()) {
+				return new ResponseEntity<FarmResult>(result, HttpStatus.CREATED);
+			}
+	
+			return new ResponseEntity<FarmResult>(result, HttpStatus.BAD_REQUEST);
+		} catch (Exception e) {
+			return new ResponseEntity<FarmResult>(HttpStatus.INTERNAL_SERVER_ERROR);
 		}
-
-		return new ResponseEntity<FarmResult>(result, HttpStatus.BAD_REQUEST);
 	}
 	
 	@RequestMapping(value = "/cows/{id}", method = RequestMethod.PUT)
 	public ResponseEntity<FarmResult> updateCow(@RequestBody CowModel cowModel, @PathVariable long id) {
 		
-		FarmResult result = animalsBL.updateCow(cowModel, id);
-		
-		if (result.isSucceeded()) {
-			return new ResponseEntity<FarmResult>(result, HttpStatus.OK);
+		try {
+			FarmResult result = animalsBL.updateCow(cowModel, id);
+			
+			if (result.isSucceeded()) {
+				return new ResponseEntity<FarmResult>(result, HttpStatus.OK);
+			}
+			
+			return new ResponseEntity<FarmResult>(result, HttpStatus.BAD_REQUEST);
+		} catch (Exception e) {
+			return new ResponseEntity<FarmResult>(HttpStatus.INTERNAL_SERVER_ERROR);
 		}
-		
-		return new ResponseEntity<FarmResult>(result, HttpStatus.BAD_REQUEST);
 	}
 	
 	@RequestMapping(value = "/cows", params = { "page", "size" }, method = RequestMethod.GET)
@@ -49,13 +57,17 @@ public class CowController {
 												  @RequestParam("size") int size,
 												  @RequestParam(name = "sort", defaultValue = "insertedDateTime") String orderBy) {
 		
-		FarmResult result = animalsBL.getAllCows(page, size, orderBy);
-
-		if(result.isSucceeded()) {
-			return new ResponseEntity<FarmResult>(result, HttpStatus.OK);			
-		}	
-		
-		return new ResponseEntity<FarmResult>(result, HttpStatus.BAD_REQUEST);	
+		try {
+			FarmResult result = animalsBL.getAllCows(page, size, orderBy);
+	
+			if(result.isSucceeded()) {
+				return new ResponseEntity<FarmResult>(result, HttpStatus.OK);			
+			}	
+			
+			return new ResponseEntity<FarmResult>(result, HttpStatus.BAD_REQUEST);	
+		} catch (Exception e) {
+			return new ResponseEntity<FarmResult>(HttpStatus.INTERNAL_SERVER_ERROR);
+		}
 	}
 }
  

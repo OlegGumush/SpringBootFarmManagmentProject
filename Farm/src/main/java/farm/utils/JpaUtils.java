@@ -72,7 +72,7 @@ public class JpaUtils {
 				result.add(criteriaBuilder.desc(root.get(order.getKey())));
 				break;	
 			default:
-				throw new FarmException("Filter doesn't match any operator");
+				throw new FarmException("OrderBy doesn't match any operator");
 			}			
 		}
 				

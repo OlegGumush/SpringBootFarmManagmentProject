@@ -14,7 +14,7 @@ public class OrderBy {
 		}
 		
 		if (key.startsWith("-")) {
-			return new OrderBy(key, OrderType.Desc);
+			return new OrderBy(key.substring(1), OrderType.Desc);
 		} else {
 			return new OrderBy(key, OrderType.Asc);			
 		}

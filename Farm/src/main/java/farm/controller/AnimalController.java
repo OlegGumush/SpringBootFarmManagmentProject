@@ -23,37 +23,51 @@ public class AnimalController {
 												    @RequestParam(name = "size", defaultValue = "100") int size,
 												    @RequestParam(name = "sort", defaultValue = "insertedDateTime") String orderBy) {
 		
-		FarmResult result = animalsBL.getAllAnimals(page, size, orderBy);
+		try {
+			FarmResult result = animalsBL.getAllAnimals(page, size, orderBy);
 		
-		if(result.isSucceeded()) {
-			return new ResponseEntity<FarmResult>(result, HttpStatus.OK);			
-		}
-		
-		return new ResponseEntity<FarmResult>(result, HttpStatus.BAD_REQUEST);		
+			if(result.isSucceeded()) {
+				return new ResponseEntity<FarmResult>(result, HttpStatus.OK);			
+			}
+			
+			return new ResponseEntity<FarmResult>(result, HttpStatus.BAD_REQUEST);				
+
+		} catch (Exception e) {
+			return new ResponseEntity<FarmResult>(HttpStatus.INTERNAL_SERVER_ERROR);
+		}		
 	}
 	
 	@RequestMapping(value = "/animals/{id}", method = RequestMethod.GET)
 	public ResponseEntity<FarmResult> getAnimalById(@PathVariable long id) {
 		
-		FarmResult result = animalsBL.getAnimalById(id);
-		
-		if (result.getResult() == null) {
-			return new ResponseEntity<FarmResult>(result, HttpStatus.NOT_FOUND);
+		try {
+			FarmResult result = animalsBL.getAnimalById(id);
+			
+			if (result.getResult() == null) {
+				return new ResponseEntity<FarmResult>(result, HttpStatus.NOT_FOUND);
+			}
+			
+			return new ResponseEntity<FarmResult>(result, HttpStatus.OK);
+			
+		} catch (Exception e) {
+			return new ResponseEntity<FarmResult>(HttpStatus.INTERNAL_SERVER_ERROR);
 		}
-		
-		return new ResponseEntity<FarmResult>(result, HttpStatus.OK);
 	}	
 	
 	@RequestMapping(value = "/animals/{id}", method = RequestMethod.DELETE)
 	public ResponseEntity<FarmResult> deleteAnimalById(@PathVariable long id) {
 		
-		FarmResult result = animalsBL.deleteAnimalById(id);
-		
-		if (result.isSucceeded()) {
-			 return new ResponseEntity<FarmResult>(result, HttpStatus.OK);
+		try {
+			FarmResult result = animalsBL.deleteAnimalById(id);
+			
+			if (result.isSucceeded()) {
+				 return new ResponseEntity<FarmResult>(result, HttpStatus.OK);
+			}
+			
+			return new ResponseEntity<FarmResult>(result, HttpStatus.NOT_FOUND);
+		} catch (Exception e) {
+			return new ResponseEntity<FarmResult>(HttpStatus.INTERNAL_SERVER_ERROR);
 		}
-		
-		return new ResponseEntity<FarmResult>(result, HttpStatus.NOT_FOUND);
 	}	
 }
 

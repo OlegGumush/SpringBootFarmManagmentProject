@@ -11,6 +11,6 @@ public enum ErrorType {
 	CannotUpdateBullWithCowModel,
 	
 	// Sort
-	InvalidOrderByParameters
+	InvalidSortParameter
 	;
 }

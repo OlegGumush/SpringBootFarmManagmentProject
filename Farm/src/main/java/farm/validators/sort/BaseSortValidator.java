@@ -22,7 +22,7 @@ public class BaseSortValidator implements ISortValidator {
 	public FarmResult validateSort(String orderBy) {
 		
 		if(validBaseSortOptions.get(orderBy) == null) {
-			return new FarmResult(ErrorType.InvalidOrderByParameters, "orderBy");
+			return new FarmResult(ErrorType.InvalidSortParameter, "orderBy");
 		}
 		return new FarmResult();
 	}
