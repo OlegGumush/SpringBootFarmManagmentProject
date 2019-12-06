@@ -7,6 +7,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Order;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 import javax.transaction.Transactional;
@@ -14,8 +15,8 @@ import javax.transaction.Transactional;
 import org.springframework.stereotype.Repository;
 
 import farm.entity.BaseEntity;
-import farm.exception.FarmException;
-import farm.repository.query.Filter;
+import farm.repository.jpa.JpaUtils;
+import farm.repository.query.OrderBy;
 import farm.repository.query.SearchParams;
 
 @Repository
@@ -66,18 +67,19 @@ public abstract class BaseRepository<T extends BaseEntity> implements IRepositor
 		entityManager.merge(entity);
 		return entity;
 	}
-	
-	@Override
-	/**
-	 * Default: page 0, size 100
-	 */
-	public List<T> findAll() {		
-		return findAll(0, 100);
-	}
 
 	@Override
-	public List<T> findAll(int page, int size) {		
-		return findAll(page, size, new SearchParams());
+	public List<T> findAll(int page, int size, String orderBy) {		
+		
+		SearchParams sp = new SearchParams();
+		
+		if(orderBy.startsWith("-")) {
+			sp.orderBy(OrderBy.desc(orderBy.substring(1)));		
+		} else {
+			sp.orderBy(OrderBy.asc(orderBy));		
+		}
+		
+		return findAll(page, size, sp);
 	}
 	
 	public List<T> findAll(int page, int size, SearchParams sp) {
@@ -85,11 +87,12 @@ public abstract class BaseRepository<T extends BaseEntity> implements IRepositor
 		CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
 		CriteriaQuery<T> CriteriaQuery = criteriaBuilder.createQuery(type);
 		Root<T> root = CriteriaQuery.from(type);
-
 		
-		Predicate[] predicates = getPredicates(sp,root,criteriaBuilder);
-		CriteriaQuery.select(root).where(criteriaBuilder.and(predicates));    
-
+		Predicate[] predicates = JpaUtils.getPredicates(sp,root,criteriaBuilder);
+		List<Order> orders = JpaUtils.getOrderBy(sp, root, criteriaBuilder);
+		
+		CriteriaQuery.select(root).where(criteriaBuilder.and(predicates)).orderBy(orders);  		
+		
 		List<T> entities = entityManager.createQuery(CriteriaQuery)
 		.setFirstResult(page * size)
 		.setMaxResults(size)
@@ -104,9 +107,9 @@ public abstract class BaseRepository<T extends BaseEntity> implements IRepositor
 		CriteriaQuery<T> CriteriaQuery = criteriaBuilder.createQuery(type);
 		Root<T> root = CriteriaQuery.from(type);
 		
-		
-		Predicate[] predicates = getPredicates(sp,root,criteriaBuilder);
-		
+		Predicate[] predicates = JpaUtils.getPredicates(sp,root,criteriaBuilder);
+		List<Order> orderBy = JpaUtils.getOrderBy(sp,root,criteriaBuilder);
+
 		CriteriaQuery.select(root).where(criteriaBuilder.and(predicates));    
 		
 		List<T> animals = entityManager.createQuery(CriteriaQuery).getResultList();
@@ -116,37 +119,6 @@ public abstract class BaseRepository<T extends BaseEntity> implements IRepositor
 		}
 		
 		return animals;
-	}
-	
-	
-	private Predicate [] getPredicates(SearchParams sp, Root<T> root, CriteriaBuilder criteriaBuilder) {
-		
-		List<Filter> filters = sp.getFilters();
-		Predicate [] result = new Predicate[filters.size()];
-
-		for (int i = 0; i < filters.size(); i++) {
-			
-			Filter filter = filters.get(i);
-			
-			switch (filter.getFilter()) {
-			case Equal:
-				result[i] = (criteriaBuilder.equal(root.get(filter.getKey()), filter.getValue()));
-				break;
-			case NotEqual:
-				result[i] = (criteriaBuilder.notEqual(root.get(filter.getKey()), filter.getValue()));
-				break;
-			case IsNull:
-				result[i] = (criteriaBuilder.isNull(root.get(filter.getKey())));
-				break;
-			case isNotNull:
-				result[i] = (criteriaBuilder.isNotNull(root.get(filter.getKey())));
-				break;		
-			default:
-				throw new FarmException("Filter doesn't match any operator");
-			}			
-		}
-				
-		return result;
 	}
 }
 

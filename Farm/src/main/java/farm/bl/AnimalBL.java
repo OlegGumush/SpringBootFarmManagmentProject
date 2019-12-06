@@ -1,48 +1,74 @@
 package farm.bl;
 
+import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import farm.entity.Animal;
-import farm.entity.Bull;
-import farm.entity.Cow;
+import farm.entity.animal.Animal;
+import farm.entity.animal.Bull;
+import farm.entity.animal.Cow;
 import farm.model.AnimalModel;
 import farm.model.BullModel;
 import farm.model.CowModel;
 import farm.repository.AnimalRepository;
 import farm.result.FarmResult;
-import farm.validators.IAnimalValidator;
 import farm.validators.ValidatorFactory;
+import farm.validators.animal.IAnimalValidator;
+import farm.validators.sort.BaseSortValidator;
 
 @Service
 public class AnimalBL {
 	
 	@Autowired
-	private AnimalRepository animalRepository;
+	protected AnimalRepository animalRepository;
 	
 	@Autowired
-	private ValidatorFactory validatorFactory;
+	protected ValidatorFactory validatorFactory;	
 	
-	public ArrayList<Animal> getAllAnimals(int page, int size) {
+	public FarmResult getAllAnimals(int page, int size, String OrderBy) {
 		
-		return (ArrayList<Animal>) animalRepository.findAll(page, size);
+		BaseSortValidator sortValidator = (BaseSortValidator) validatorFactory.getSortValidator(Animal.class);
+		
+		FarmResult result = sortValidator.validateSort(OrderBy);
+		
+		if(!result.isSucceeded()) {
+			return result;
+		}
+		
+		List<Animal> animals = (ArrayList<Animal>) animalRepository.findAll(page, size, OrderBy);	
+		result.setResult((Serializable) animals);
+		
+		return result;
 	}
 	
-	public Animal getAnimalById(long id) {
+	public FarmResult getAnimalById(long id) {
 		
-		return animalRepository.findById(id);
+		FarmResult result = new FarmResult();
+		
+		Animal animal =  animalRepository.findById(id);
+
+		result.setResult(animal);
+		if(animal == null) {
+			result.setSucceeded(false);;			
+		}
+		
+		return result;
 	}
 	
-	public boolean deleteAnimalById(long id) {
+	public FarmResult deleteAnimalById(long id) {
+		
+		FarmResult result = new FarmResult();
 		
 		if (animalRepository.findById(id) != null) {
 			animalRepository.removeById(id);			
-			return true;
+			result.setResult(true);
 		} 
 		
-		return false;
+		result.setResult(false, false);
+		return result;
 	}
 
 	public FarmResult createCow(CowModel cowModel) {
@@ -60,7 +86,7 @@ public class AnimalBL {
 		
 		animalRepository.insert(cow);
 		
-		result.setEntityId(cow.getId());
+		result.setResult(cow.getId());
 		return result;
 	}
 	
@@ -79,16 +105,17 @@ public class AnimalBL {
 
 		animalRepository.insert(bull);
 		
-		result.setEntityId(bull.getId());
+		result.setResult(bull.getId());
 		return result;
 	}
 	
 	public FarmResult updateCow(CowModel cowModel, long id) {
 		
-		Animal cow = getAnimalById(id);
+		FarmResult result = getAnimalById(id);
+		Animal cow = (Animal)result.getResult();
 		
 		IAnimalValidator animalValidator = (IAnimalValidator) validatorFactory.getValidator(cowModel);
-		FarmResult result = animalValidator.validateUpdate(cowModel, cow);
+		result = animalValidator.validateUpdate(cowModel, cow);
 		
 		if(!result.isSucceeded()) {
 			return result;
@@ -98,16 +125,17 @@ public class AnimalBL {
 		
 		animalRepository.update(cow);
 		
-		result.setEntityId(cow.getId());
+		result.setResult(cow.getId());
 		return result;
 	}
 	
 	public FarmResult updateBull(BullModel bullModel, long id) {
 		
-		Animal bull = getAnimalById(id);
+		FarmResult result = getAnimalById(id);
+		Animal bull = (Bull)result.getResult();
 		
 		IAnimalValidator animalValidator = (IAnimalValidator) validatorFactory.getValidator(bullModel);
-		FarmResult result = animalValidator.validateUpdate(bullModel, bull);
+		result = animalValidator.validateUpdate(bullModel, bull);
 		
 		if(!result.isSucceeded()) {
 			return result;
@@ -117,7 +145,7 @@ public class AnimalBL {
 		
 		animalRepository.update(bull);
 		
-		result.setEntityId(bull.getId());
+		result.setResult(bull.getId());
 		return result;
 	}
 
@@ -150,7 +178,6 @@ public class AnimalBL {
 
 		animal.setAnimalName(animalModel.AnimalName);
 	}
-
 }
 
 

@@ -26,7 +26,7 @@ public class Filter implements Serializable {
 		return new Filter(key, null, FilterType.isNotNull);			
 	}
 
-	public Filter(String key, Object value, FilterType filter) {
+	private Filter(String key, Object value, FilterType filter) {
 		this.key = key;
 		this.value = value;
 		this.filter = filter;

@@ -1,4 +1,4 @@
-package farm.entity;
+package farm.entity.animal;
 
 import javax.persistence.DiscriminatorColumn;
 import javax.persistence.Entity;
@@ -9,6 +9,7 @@ import javax.persistence.InheritanceType;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 
+import farm.entity.BaseEntity;
 import farm.enums.AnimalSex;
 
 @Entity

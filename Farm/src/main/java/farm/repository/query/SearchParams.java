@@ -7,6 +7,7 @@ import java.util.List;
 public class SearchParams implements Serializable {
 
 	List<Filter> filters = new ArrayList<Filter>();
+	List<OrderBy> orders = new ArrayList<OrderBy>();
 
 	public SearchParams where(Filter filter) {
 		
@@ -24,8 +25,29 @@ public class SearchParams implements Serializable {
 		}
 		return this;
 	}
+	
+	public SearchParams orderBy(OrderBy orderBy) {
+
+		if(orderBy != null) {
+			this.orders.add(orderBy);
+		}
+		return this;
+	}
+	
+	public SearchParams orderBy(OrderBy ... orders) {
+
+		for (int i = 0; i < orders.length; i++) {
+			
+			this.orders.add(orders[i]);
+		}
+		return this;
+	}
 
 	public List<Filter> getFilters() {
 		return filters;
 	}	
+	
+	public List<OrderBy> getOrders() {
+		return orders;
+	}
 }

@@ -1,8 +1,9 @@
-package farm.validators;
+package farm.validators.animal;
 
-import farm.entity.Animal;
+import farm.entity.animal.Animal;
 import farm.model.AnimalModel;
 import farm.result.FarmResult;
+import farm.validators.IValidator;
 
 public interface IAnimalValidator extends IValidator {
 

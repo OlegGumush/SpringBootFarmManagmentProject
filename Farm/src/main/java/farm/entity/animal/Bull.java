@@ -1,4 +1,4 @@
-package farm.entity;
+package farm.entity.animal;
 
 import javax.persistence.DiscriminatorValue;
 import javax.persistence.Entity;

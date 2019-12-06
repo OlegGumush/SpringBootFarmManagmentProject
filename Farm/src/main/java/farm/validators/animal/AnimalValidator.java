@@ -1,11 +1,11 @@
-package farm.validators;
+package farm.validators.animal;
 
 import org.apache.logging.log4j.util.Strings;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import farm.bl.AnimalBL;
-import farm.entity.Animal;
+import farm.entity.animal.Animal;
 import farm.enums.ErrorType;
 import farm.model.AnimalModel;
 import farm.result.FarmResult;

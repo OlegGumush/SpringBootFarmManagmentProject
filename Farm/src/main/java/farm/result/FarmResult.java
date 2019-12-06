@@ -8,7 +8,7 @@ import farm.error.FarmError;
 
 public class FarmResult implements Serializable {
 
-	private long entityId;
+	private Serializable result;
 	private boolean isSucceeded;
 	private ArrayList<FarmError> errors;
 	
@@ -20,7 +20,7 @@ public class FarmResult implements Serializable {
 	
 	public FarmResult(long entityId) {
 		this();
-		this.entityId = entityId;
+		this.result = entityId;
 	}
 	
 	public FarmResult(boolean isSucceeded) {
@@ -66,11 +66,16 @@ public class FarmResult implements Serializable {
 		this.errors = errors;
 	}
 
-	public long getEntityId() {
-		return entityId;
+	public Serializable getResult() {
+		return result;
 	}
 
-	public void setEntityId(long entityId) {
-		this.entityId = entityId;
+	public void setResult(Serializable result) {
+		this.result = result;
+	}
+	
+	public void setResult(Serializable result, boolean isSucceeded) {
+		this.isSucceeded = isSucceeded;
+		this.result = result;
 	}
 }

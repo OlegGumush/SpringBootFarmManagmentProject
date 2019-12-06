@@ -4,7 +4,7 @@ import java.util.List;
 
 import org.springframework.stereotype.Repository;
 
-import farm.entity.Animal;
+import farm.entity.animal.Animal;
 import farm.enums.AnimalSex;
 import farm.repository.query.Filter;
 import farm.repository.query.SearchParams;
