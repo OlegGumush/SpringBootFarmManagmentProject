@@ -20,8 +20,8 @@ public class AnimalController {
 	
 	@RequestMapping(value = "/animals", params = { "page", "size" }, method = RequestMethod.GET)
 	public ResponseEntity<FarmResult> getAllAnimals(@RequestParam(name = "page", defaultValue = "0") int page,
-														   @RequestParam(name = "size", defaultValue = "100") int size,
-														   @RequestParam(name = "sort", defaultValue = "insertedDateTime") String orderBy) {
+												    @RequestParam(name = "size", defaultValue = "100") int size,
+												    @RequestParam(name = "sort", defaultValue = "insertedDateTime") String orderBy) {
 		
 		FarmResult result = animalsBL.getAllAnimals(page, size, orderBy);
 		

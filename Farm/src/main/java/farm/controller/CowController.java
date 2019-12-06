@@ -1,7 +1,5 @@
 package farm.controller;
 
-import java.util.ArrayList;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -13,7 +11,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import farm.bl.AnimalBL;
-import farm.entity.animal.Animal;
 import farm.model.CowModel;
 import farm.result.FarmResult;
 
@@ -48,11 +45,17 @@ public class CowController {
 	}
 	
 	@RequestMapping(value = "/cows", params = { "page", "size" }, method = RequestMethod.GET)
-	public ResponseEntity<ArrayList<Animal>> getAllBulls(@RequestParam("page") int page, @RequestParam("size") int size) {
+	public ResponseEntity<FarmResult> getAllBulls(@RequestParam("page") int page,
+												  @RequestParam("size") int size,
+												  @RequestParam(name = "sort", defaultValue = "insertedDateTime") String orderBy) {
 		
-		ArrayList<Animal> animals = animalsBL.getAllCows(page, size);
+		FarmResult result = animalsBL.getAllCows(page, size, orderBy);
+
+		if(result.isSucceeded()) {
+			return new ResponseEntity<FarmResult>(result, HttpStatus.OK);			
+		}	
 		
-		return new ResponseEntity<ArrayList<Animal>>(animals, HttpStatus.OK);
+		return new ResponseEntity<FarmResult>(result, HttpStatus.BAD_REQUEST);	
 	}
 }
  

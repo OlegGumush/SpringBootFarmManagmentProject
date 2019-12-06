@@ -6,13 +6,21 @@ import java.util.List;
 
 public class SearchParams implements Serializable {
 
-	List<Filter> filters = new ArrayList<Filter>();
-	List<OrderBy> orders = new ArrayList<OrderBy>();
-
+	List<Filter> filters;
+	List<OrderBy> orders;
+	Pagination page;
+	
+	public SearchParams() {
+		
+		this.filters = new ArrayList<Filter>();
+		this.orders = new ArrayList<OrderBy>();
+		this.page = null;
+	}
+	
 	public SearchParams where(Filter filter) {
 		
 		if(filter != null) {
-			filters.add(filter);
+			this.filters.add(filter);
 		}
 		return this;
 	}
@@ -26,7 +34,7 @@ public class SearchParams implements Serializable {
 		return this;
 	}
 	
-	public SearchParams orderBy(OrderBy orderBy) {
+	public SearchParams sort(OrderBy orderBy) {
 
 		if(orderBy != null) {
 			this.orders.add(orderBy);
@@ -34,7 +42,7 @@ public class SearchParams implements Serializable {
 		return this;
 	}
 	
-	public SearchParams orderBy(OrderBy ... orders) {
+	public SearchParams sort(OrderBy ... orders) {
 
 		for (int i = 0; i < orders.length; i++) {
 			
@@ -42,12 +50,24 @@ public class SearchParams implements Serializable {
 		}
 		return this;
 	}
+	
+	public SearchParams page(Pagination page) {
+
+		if(page != null) {
+			this.page = page;
+		}
+		return this;
+	}
 
 	public List<Filter> getFilters() {
-		return filters;
+		return this.filters;
 	}	
 	
 	public List<OrderBy> getOrders() {
-		return orders;
+		return this.orders;
+	}
+	
+	public Pagination getPagination() {
+		return this.page;
 	}
 }

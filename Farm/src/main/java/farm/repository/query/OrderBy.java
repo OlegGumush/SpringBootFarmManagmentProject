@@ -7,16 +7,17 @@ public class OrderBy {
 	public String key;
 	public OrderType order;
 	
-	public static OrderBy asc(String key) {
-		return new OrderBy(key, OrderType.Asc);
-	}
-
-	public static OrderBy desc(String key) {
-		return new OrderBy(key, OrderType.Desc);
-	}
-	
-	public OrderBy() {
+	public static OrderBy orderBy(String key) {
 		
+		if (key == null) {
+			return null;
+		}
+		
+		if (key.startsWith("-")) {
+			return new OrderBy(key, OrderType.Desc);
+		} else {
+			return new OrderBy(key, OrderType.Asc);			
+		}
 	}
 
 	private OrderBy(String key, OrderType order) {

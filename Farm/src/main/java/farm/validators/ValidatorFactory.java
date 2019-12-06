@@ -3,8 +3,7 @@ package farm.validators;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import farm.entity.BaseEntity;
-import farm.entity.animal.Animal;
+import farm.enums.EntityType;
 import farm.exception.FarmException;
 import farm.model.BaseModel;
 import farm.validators.animal.BullValidator;
@@ -19,8 +18,6 @@ public class ValidatorFactory {
 	
 	@Autowired
 	private BullValidator bullValidator;
-	
-	
 	
 	public ValidatorFactory() {
 		
@@ -38,13 +35,15 @@ public class ValidatorFactory {
 		}
 	}
 	
-	public IValidator getSortValidator(Class<? extends BaseEntity> clazz) {
+	public IValidator getSortValidator(EntityType entityType) {
 		
-		if(clazz.equals(Animal.class)) {
-			
+		switch (entityType) {
+		case Animal:
+		case Bull:
+		case Cow:
 			return new BaseSortValidator();
-		}
-		
-		return null;
+		default:
+			throw new FarmException("ValidatorFactory cannot find entity type " + entityType);
+		}	
 	}
 }

@@ -13,6 +13,12 @@ public interface IRepository<T extends BaseEntity> {
 	T findById(long id);
 	
 	boolean removeById(long id);
-		
-	List<T> findAll(int page, int size, String orderBy);
+			
+	List<T> findAll();	
+	
+	List<T> findAllWithOrder(String orderBy);		
+	
+	List<T> findAllWithPage(int page, int size);
+	
+	List<T> findAllWithPageAndOrder(int page, int size, String orderBy);
 }

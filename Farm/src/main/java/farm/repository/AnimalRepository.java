@@ -17,18 +17,20 @@ public class AnimalRepository extends BaseRepository<Animal>  {
 	}	
 	
 	
-	public List<Animal> findAllCows(int page, int size) {
+	public List<Animal> findAllCows(int page, int size, String orderBy) {
 		
-		SearchParams sp = new SearchParams().where(Filter.equal("animalSex", AnimalSex.Female));		
+		SearchParams sp = new SearchParams()
+								.where(Filter.equal("animalSex", AnimalSex.Female));	
 		
-		return findAll(page, size, sp);
+		return findAllWithPageAndOrder(page, size, orderBy, sp);
 	}
 	
-	public List<Animal> findAllBulls(int page, int size) {
+	public List<Animal> findAllBulls(int page, int size, String orderBy) {
 		
-		SearchParams sp = new SearchParams().where(Filter.equal("animalSex", AnimalSex.Male));		
+		SearchParams sp = new SearchParams()
+								.where(Filter.equal("animalSex", AnimalSex.Male));	
 		
-		return findAll(page, size, sp);
+		return findAllWithPageAndOrder(page, size,orderBy, sp);
 	}
 
 	public boolean isAnimalExistsByNameExceptId(String name, long id) {
@@ -37,7 +39,7 @@ public class AnimalRepository extends BaseRepository<Animal>  {
 							.where(Filter.equal("animalName", name))
 							.where(Filter.notEqual("id", id));
 		
-		List<Animal> result = find(sp);
+		List<Animal> result = findAll(sp);
 		
 		if(result.isEmpty()) {
 			return false;

@@ -10,6 +10,12 @@ public class Filter implements Serializable {
 	public Object value;
 	public FilterType filter;
 	
+	private Filter(String key, Object value, FilterType filter) {
+		this.key = key;
+		this.value = value;
+		this.filter = filter;
+	}
+
 	public static Filter equal(String key, Object value) {
 		return new Filter(key, value, FilterType.Equal);
 	}
@@ -25,17 +31,7 @@ public class Filter implements Serializable {
 	public static Filter isNotNull(String key) {
 		return new Filter(key, null, FilterType.isNotNull);			
 	}
-
-	private Filter(String key, Object value, FilterType filter) {
-		this.key = key;
-		this.value = value;
-		this.filter = filter;
-	}
 	
-	public Filter() {
-
-	}
-
 	public String getKey() {
 		return key;
 	}

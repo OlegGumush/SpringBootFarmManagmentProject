@@ -1,10 +1,10 @@
 package farm.repository;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import javax.persistence.TypedQuery;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Order;
@@ -15,9 +15,10 @@ import javax.transaction.Transactional;
 import org.springframework.stereotype.Repository;
 
 import farm.entity.BaseEntity;
-import farm.repository.jpa.JpaUtils;
 import farm.repository.query.OrderBy;
+import farm.repository.query.Pagination;
 import farm.repository.query.SearchParams;
+import farm.utils.JpaUtils;
 
 @Repository
 public abstract class BaseRepository<T extends BaseEntity> implements IRepository<T> {
@@ -67,58 +68,84 @@ public abstract class BaseRepository<T extends BaseEntity> implements IRepositor
 		entityManager.merge(entity);
 		return entity;
 	}
-
+	
 	@Override
-	public List<T> findAll(int page, int size, String orderBy) {		
+	public List<T> findAll() {		
 		
-		SearchParams sp = new SearchParams();
-		
-		if(orderBy.startsWith("-")) {
-			sp.orderBy(OrderBy.desc(orderBy.substring(1)));		
-		} else {
-			sp.orderBy(OrderBy.asc(orderBy));		
-		}
-		
-		return findAll(page, size, sp);
+		return findAllWithOrder(null, new SearchParams());
 	}
 	
-	public List<T> findAll(int page, int size, SearchParams sp) {
+	@Override
+	public List<T> findAllWithOrder(String orderBy) {		
+		
+		return findAllWithPageAndOrder(0, 0, orderBy, new SearchParams());
+	}
+	
+	@Override
+	public List<T> findAllWithPage(int page, int size) {		
+		
+		return findAllWithPageAndOrder(page, size, null, new SearchParams());
+	}
+	
+	@Override
+	public List<T> findAllWithPageAndOrder(int page, int size, String orderBy) {		
+		
+		return findAllWithPageAndOrder(page, size, orderBy, new SearchParams());
+	}
+	
+	// Protected & Private section
+	
+	protected List<T> findAll(SearchParams sp) {		
+		
+		return find(sp);	
+	}
+	
+	protected List<T> findAllWithOrder(String orderBy, SearchParams sp) {		
+				
+		return findAllWithPageAndOrder(0, 0, orderBy, sp);
+	}
+	
+	protected List<T> findAllWithPage(int page, int size, SearchParams sp) {		
+		
+		return findAllWithPageAndOrder(page, size, null, sp);
+	}
+	
+	protected List<T> findAllWithPageAndOrder(int page, int size, String orderBy, SearchParams sp) {		
+		
+		if (sp == null) {
+			sp = new SearchParams();
+		}
+		
+		sp.sort(OrderBy.orderBy(orderBy))
+		  .page(Pagination.page(page, size));
+		
+		return find(sp);
+	}
+	
+	private List<T> find(SearchParams sp) {
 
 		CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
-		CriteriaQuery<T> CriteriaQuery = criteriaBuilder.createQuery(type);
-		Root<T> root = CriteriaQuery.from(type);
+		CriteriaQuery<T> criteriaQuery = criteriaBuilder.createQuery(type);
+		Root<T> root = criteriaQuery.from(type);
 		
 		Predicate[] predicates = JpaUtils.getPredicates(sp,root,criteriaBuilder);
 		List<Order> orders = JpaUtils.getOrderBy(sp, root, criteriaBuilder);
+		Pagination page = sp.getPagination();
 		
-		CriteriaQuery.select(root).where(criteriaBuilder.and(predicates)).orderBy(orders);  		
+		criteriaQuery.select(root).where(criteriaBuilder.and(predicates)).orderBy(orders);  		
 		
-		List<T> entities = entityManager.createQuery(CriteriaQuery)
-		.setFirstResult(page * size)
-		.setMaxResults(size)
-		.getResultList();
+		TypedQuery<T> query = entityManager.createQuery(criteriaQuery);
+		List<T> entities = null;
 		
-		return entities;
-	}
-	
-	public List<T> find(SearchParams sp) {
-		
-	    CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
-		CriteriaQuery<T> CriteriaQuery = criteriaBuilder.createQuery(type);
-		Root<T> root = CriteriaQuery.from(type);
-		
-		Predicate[] predicates = JpaUtils.getPredicates(sp,root,criteriaBuilder);
-		List<Order> orderBy = JpaUtils.getOrderBy(sp,root,criteriaBuilder);
-
-		CriteriaQuery.select(root).where(criteriaBuilder.and(predicates));    
-		
-		List<T> animals = entityManager.createQuery(CriteriaQuery).getResultList();
-		
-		if(animals.isEmpty()) {
-			return new ArrayList<T>();
+		if(page == null) {
+			entities = query.getResultList();
+		} else {
+			entities = query.setFirstResult(page.getPage() * page.getSize())
+									.setMaxResults(page.getSize())
+									.getResultList();
 		}
-		
-		return animals;
+
+		return entities;
 	}
 }
 

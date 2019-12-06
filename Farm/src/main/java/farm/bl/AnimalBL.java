@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 import farm.entity.animal.Animal;
 import farm.entity.animal.Bull;
 import farm.entity.animal.Cow;
+import farm.enums.EntityType;
 import farm.model.AnimalModel;
 import farm.model.BullModel;
 import farm.model.CowModel;
@@ -28,17 +29,16 @@ public class AnimalBL {
 	@Autowired
 	protected ValidatorFactory validatorFactory;	
 	
-	public FarmResult getAllAnimals(int page, int size, String OrderBy) {
+	public FarmResult getAllAnimals(int page, int size, String orderBy) {
 		
-		BaseSortValidator sortValidator = (BaseSortValidator) validatorFactory.getSortValidator(Animal.class);
-		
-		FarmResult result = sortValidator.validateSort(OrderBy);
+		BaseSortValidator sortValidator = (BaseSortValidator) validatorFactory.getSortValidator(EntityType.Animal);
+		FarmResult result = sortValidator.validateSort(orderBy);
 		
 		if(!result.isSucceeded()) {
 			return result;
 		}
 		
-		List<Animal> animals = (ArrayList<Animal>) animalRepository.findAll(page, size, OrderBy);	
+		List<Animal> animals = (ArrayList<Animal>) animalRepository.findAllWithPageAndOrder(page, size, orderBy);	
 		result.setResult((Serializable) animals);
 		
 		return result;
@@ -149,14 +149,35 @@ public class AnimalBL {
 		return result;
 	}
 
-	public ArrayList<Animal> getAllCows(int page, int size) {
+	public FarmResult getAllCows(int page, int size, String orderBy) {
 
-		return (ArrayList<Animal>) animalRepository.findAllCows(page, size);
+		
+		BaseSortValidator sortValidator = (BaseSortValidator) validatorFactory.getSortValidator(EntityType.Cow);
+		FarmResult result = sortValidator.validateSort(orderBy);
+		
+		if(!result.isSucceeded()) {
+			return result;
+		}
+		
+		List<Animal> animals = (ArrayList<Animal>) animalRepository.findAllCows(page, size, orderBy);	
+		result.setResult((Serializable) animals);
+		
+		return result;
 	}
 
-	public ArrayList<Animal> getAllBulls(int page, int size) {
+	public FarmResult getAllBulls(int page, int size, String orderBy) {
 		
-		return (ArrayList<Animal>) animalRepository.findAllBulls(page, size);
+		BaseSortValidator sortValidator = (BaseSortValidator) validatorFactory.getSortValidator(EntityType.Bull);
+		FarmResult result = sortValidator.validateSort(orderBy);
+		
+		if(!result.isSucceeded()) {
+			return result;
+		}
+		
+		List<Animal> animals = (ArrayList<Animal>) animalRepository.findAllBulls(page, size, orderBy);	
+		result.setResult((Serializable) animals);
+		
+		return result;
 	}
 	
 	public boolean isAnimalExistsByNameExceptId(String animalName, long id) {
