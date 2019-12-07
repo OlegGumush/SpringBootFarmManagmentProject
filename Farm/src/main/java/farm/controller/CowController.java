@@ -57,9 +57,9 @@ public class CowController {
 	
 	@RequestMapping(value = "/cows", params = { "page", "size" }, method = RequestMethod.GET)
 	@ApiOperation(value = "Get all cows", notes="notes", nickname = "GetAllCows")
-	public ResponseEntity<FarmResult> getAllCows(@RequestParam("page") int page,
-												  @RequestParam("size") int size,
-												  @RequestParam(name = "sort", defaultValue = "insertedDateTime") String orderBy) {
+	public ResponseEntity<FarmResult> getAllCows(@RequestParam(name = "page", defaultValue = "0") int page,
+		      									 @RequestParam(name = "size", defaultValue = "100") int size,
+												 @RequestParam(name = "sort", defaultValue = "insertedDateTime") String orderBy) {
 		
 		try {
 			FarmResult result = animalsBL.getAllCows(page, size, orderBy);

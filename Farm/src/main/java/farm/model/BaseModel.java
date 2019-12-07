@@ -8,17 +8,9 @@ import io.swagger.annotations.ApiModelProperty;
 public class BaseModel {
 	
     @ApiModelProperty(hidden = true)
-	protected ModelType type;
+	public ModelType type;
 	
 	public BaseModel(ModelType type) {
-		this.type = type;
-	}
-
-	public ModelType getType() {
-		return type;
-	}
-
-	public void setType(ModelType type) {
 		this.type = type;
 	}
 }

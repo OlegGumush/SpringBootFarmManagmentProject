@@ -58,8 +58,8 @@ public class BullController {
 	
 	@RequestMapping(value = "/bulls", params = { "page", "size" }, method = RequestMethod.GET)
 	@ApiOperation(value = "Get all bulls", notes="notes", nickname = "GetAllBulls")
-	public ResponseEntity<FarmResult> getAllBulls(@RequestParam("page") int page,
-												  @RequestParam("size") int size,
+	public ResponseEntity<FarmResult> getAllBulls(@RequestParam(name = "page", defaultValue = "0") int page,
+		    								      @RequestParam(name = "size", defaultValue = "100") int size,
 												  @RequestParam(name = "sort", defaultValue = "insertedDateTime") String orderBy) {
 		try {
 			FarmResult result = animalsBL.getAllBulls(page, size, orderBy);
