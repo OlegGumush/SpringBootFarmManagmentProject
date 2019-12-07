@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import farm.bl.AnimalBL;
 import farm.result.FarmResult;
+import io.swagger.annotations.ApiOperation;
 
 @RestController
 public class AnimalController {
@@ -19,6 +20,7 @@ public class AnimalController {
 	private AnimalBL animalsBL;
 	
 	@RequestMapping(value = "/animals", params = { "page", "size" }, method = RequestMethod.GET)
+	@ApiOperation(value = "Get all animals", notes="notes", nickname = "AllAnimals")
 	public ResponseEntity<FarmResult> getAllAnimals(@RequestParam(name = "page", defaultValue = "0") int page,
 												    @RequestParam(name = "size", defaultValue = "100") int size,
 												    @RequestParam(name = "sort", defaultValue = "insertedDateTime") String orderBy) {
@@ -38,6 +40,7 @@ public class AnimalController {
 	}
 	
 	@RequestMapping(value = "/animals/{id}", method = RequestMethod.GET)
+	@ApiOperation(value = "Get animal by id", notes="notes", nickname = "GetAnimal")
 	public ResponseEntity<FarmResult> getAnimalById(@PathVariable long id) {
 		
 		try {
@@ -55,6 +58,7 @@ public class AnimalController {
 	}	
 	
 	@RequestMapping(value = "/animals/{id}", method = RequestMethod.DELETE)
+	@ApiOperation(value = "Delete animal by id", notes="notes", nickname = "DeleteAnimal")
 	public ResponseEntity<FarmResult> deleteAnimalById(@PathVariable long id) {
 		
 		try {

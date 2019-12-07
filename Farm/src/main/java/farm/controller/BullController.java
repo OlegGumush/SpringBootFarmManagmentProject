@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RestController;
 import farm.bl.AnimalBL;
 import farm.model.BullModel;
 import farm.result.FarmResult;
+import io.swagger.annotations.ApiOperation;
 
 @RestController
 public class BullController {
@@ -21,6 +22,7 @@ public class BullController {
 	private AnimalBL animalsBL;
 	
 	@RequestMapping(value = "/bulls", method = RequestMethod.POST)
+	@ApiOperation(value = "Create bull", notes="notes", nickname = "CreateBull")
 	public ResponseEntity<FarmResult> createBull(@RequestBody BullModel bullModel) {
 		
 		try {
@@ -38,6 +40,7 @@ public class BullController {
 	}
 	
 	@RequestMapping(value = "/bulls/{id}", method = RequestMethod.PUT)
+	@ApiOperation(value = "Update bull", notes="notes", nickname = "UpdateBull")
 	public ResponseEntity<FarmResult> updateBull(@RequestBody BullModel bullModel, @PathVariable long id) {
 		
 		try {
@@ -54,6 +57,7 @@ public class BullController {
 	}
 	
 	@RequestMapping(value = "/bulls", params = { "page", "size" }, method = RequestMethod.GET)
+	@ApiOperation(value = "Get all bulls", notes="notes", nickname = "GetAllBulls")
 	public ResponseEntity<FarmResult> getAllBulls(@RequestParam("page") int page,
 												  @RequestParam("size") int size,
 												  @RequestParam(name = "sort", defaultValue = "insertedDateTime") String orderBy) {

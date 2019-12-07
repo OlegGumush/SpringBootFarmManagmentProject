@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RestController;
 import farm.bl.AnimalBL;
 import farm.model.CowModel;
 import farm.result.FarmResult;
+import io.swagger.annotations.ApiOperation;
 
 @RestController
 public class CowController {
@@ -21,7 +22,8 @@ public class CowController {
 	private AnimalBL animalsBL;
 	
 	@RequestMapping(value = "/cows", method = RequestMethod.POST)
-	public ResponseEntity<FarmResult> createBull(@RequestBody CowModel cowModel) {
+	@ApiOperation(value = "Create cow", notes="notes", nickname = "CreateCow")
+	public ResponseEntity<FarmResult> createCow(@RequestBody CowModel cowModel) {
 		
 		try {
 			FarmResult result = animalsBL.createCow(cowModel);
@@ -37,6 +39,7 @@ public class CowController {
 	}
 	
 	@RequestMapping(value = "/cows/{id}", method = RequestMethod.PUT)
+	@ApiOperation(value = "Update cow", notes="notes", nickname = "UpdateCow")
 	public ResponseEntity<FarmResult> updateCow(@RequestBody CowModel cowModel, @PathVariable long id) {
 		
 		try {
@@ -53,7 +56,8 @@ public class CowController {
 	}
 	
 	@RequestMapping(value = "/cows", params = { "page", "size" }, method = RequestMethod.GET)
-	public ResponseEntity<FarmResult> getAllBulls(@RequestParam("page") int page,
+	@ApiOperation(value = "Get all cows", notes="notes", nickname = "GetAllCows")
+	public ResponseEntity<FarmResult> getAllCows(@RequestParam("page") int page,
 												  @RequestParam("size") int size,
 												  @RequestParam(name = "sort", defaultValue = "insertedDateTime") String orderBy) {
 		

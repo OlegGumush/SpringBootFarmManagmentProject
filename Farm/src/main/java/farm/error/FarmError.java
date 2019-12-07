@@ -7,7 +7,7 @@ import farm.enums.ErrorType;
 public class FarmError implements Serializable {
 	
 	private ErrorType error;
-	private String field;
+	private String fieldName;
 	
 	public FarmError(ErrorType error) {
 		this.error = error;
@@ -15,7 +15,7 @@ public class FarmError implements Serializable {
 	
 	public FarmError(ErrorType error, String field) {
 		this(error);
-		this.field = field;
+		this.fieldName = field;
 	}
 
 	public ErrorType getError() {
@@ -26,11 +26,11 @@ public class FarmError implements Serializable {
 		this.error = error;
 	}
 
-	public String getField() {
-		return field;
+	public String getFieldName() {
+		return fieldName;
 	}
 
-	public void setField(String field) {
-		this.field = field;
-	}	
+	public void setFieldName(String fieldName) {
+		this.fieldName = fieldName;
+	}
 }

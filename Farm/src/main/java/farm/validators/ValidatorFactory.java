@@ -25,13 +25,13 @@ public class ValidatorFactory {
 
 	public IValidator getValidator(BaseModel model) {
 		
-		switch (model.type) {
+		switch (model.getType()) {
 		case bullModel:
 			return bullValidator;
 		case cowModel:
 			return cowValidator;
 		default:
-			throw new FarmException("ValidatorFactory cannot find model type " + model.type);
+			throw new FarmException("ValidatorFactory cannot find model type " + model.getType());
 		}
 	}
 	
