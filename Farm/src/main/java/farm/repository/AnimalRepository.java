@@ -2,6 +2,9 @@ package farm.repository;
 
 import java.util.List;
 
+import javax.transaction.Transactional;
+import javax.transaction.Transactional.TxType;
+
 import org.springframework.stereotype.Repository;
 
 import farm.entity.animal.Animal;
@@ -10,6 +13,7 @@ import farm.repository.query.Filter;
 import farm.repository.query.SearchParams;
 
 @Repository
+@Transactional(value = TxType.REQUIRED)
 public class AnimalRepository extends BaseRepository<Animal>  {
 
 	public AnimalRepository() {

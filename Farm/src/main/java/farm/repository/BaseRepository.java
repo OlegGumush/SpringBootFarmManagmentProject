@@ -11,6 +11,7 @@ import javax.persistence.criteria.Order;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 import javax.transaction.Transactional;
+import javax.transaction.Transactional.TxType;
 
 import org.springframework.stereotype.Repository;
 
@@ -21,6 +22,7 @@ import farm.repository.query.SearchParams;
 import farm.utils.JpaUtils;
 
 @Repository
+@Transactional(value = TxType.REQUIRED)
 public abstract class BaseRepository<T extends BaseEntity> implements IRepository<T> {
 
 	@PersistenceContext

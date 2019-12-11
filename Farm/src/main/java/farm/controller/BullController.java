@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import farm.bl.AnimalBL;
-import farm.model.BullModel;
+import farm.model.animal.BullModel;
 import farm.result.FarmResult;
 import io.swagger.annotations.ApiOperation;
 

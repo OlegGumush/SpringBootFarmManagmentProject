@@ -50,7 +50,7 @@ public class SwaggerConfig {
 	}
 
 	private Predicate<String> postPaths() {
-		return or(regex("/animals.*"), regex("/cow.*"), regex("/bulls.*"));
+		return or(regex("/animals.*"), regex("/cow.*"), regex("/bulls.*"), regex("/groups.*"));
 	}
 
 	private ApiInfo apiInfo() {

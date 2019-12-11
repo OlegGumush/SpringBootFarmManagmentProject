@@ -3,6 +3,10 @@ package farm.bl;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
+
+import javax.transaction.Transactional;
+import javax.transaction.Transactional.TxType;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -11,16 +15,18 @@ import farm.entity.animal.Animal;
 import farm.entity.animal.Bull;
 import farm.entity.animal.Cow;
 import farm.enums.EntityType;
-import farm.model.AnimalModel;
-import farm.model.BullModel;
-import farm.model.CowModel;
+import farm.model.animal.AnimalModel;
+import farm.model.animal.BullModel;
+import farm.model.animal.CowModel;
 import farm.repository.AnimalRepository;
+import farm.response_model.animal.AnimalResponseModel;
 import farm.result.FarmResult;
 import farm.validators.ValidatorFactory;
 import farm.validators.animal.IAnimalValidator;
 import farm.validators.sort.BaseSortValidator;
 
 @Service
+@Transactional(value = TxType.REQUIRED)
 public class AnimalBL {
 	
 	@Autowired
@@ -28,6 +34,9 @@ public class AnimalBL {
 	
 	@Autowired
 	protected ValidatorFactory validatorFactory;	
+	
+	@Autowired
+	protected GroupBL groupBL;
 	
 	public FarmResult getAllAnimals(int page, int size, String orderBy) {
 		
@@ -39,8 +48,8 @@ public class AnimalBL {
 		}
 		
 		List<Animal> animals = (ArrayList<Animal>) animalRepository.findAllWithPageAndOrder(page, size, orderBy);	
-		result.setResult((Serializable) animals);
-		
+				
+		result.setResult((Serializable) animals.stream().map(AnimalResponseModel::new).collect(Collectors.toList()));	
 		return result;
 	}
 	
@@ -50,11 +59,11 @@ public class AnimalBL {
 		
 		Animal animal =  animalRepository.findById(id);
 
-		result.setResult(animal);
 		if(animal == null) {
 			result.setSucceeded(false);;			
 		}
 		
+		result.setResult(animal);
 		return result;
 	}
 	
@@ -198,30 +207,6 @@ public class AnimalBL {
 	private void setCreateCommonFields(AnimalModel animalModel, Animal animal) {
 
 		animal.setAnimalName(animalModel.AnimalName);
+		animal.setGroup(groupBL.findGroupById(animalModel.GroupId));
 	}
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

@@ -5,7 +5,7 @@ import org.springframework.stereotype.Component;
 import farm.entity.animal.Animal;
 import farm.enums.AnimalSex;
 import farm.enums.ErrorType;
-import farm.model.AnimalModel;
+import farm.model.animal.AnimalModel;
 import farm.result.FarmResult;
 
 @Component

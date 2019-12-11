@@ -13,15 +13,15 @@ import javax.persistence.PreUpdate;
 import farm.utils.DateTimes;
 
 @MappedSuperclass
-public abstract class BaseEntity implements Serializable{
+public abstract class BaseEntity implements Serializable {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private long id;
 	
-	private long insertedDateTime;
+	private Long insertedDateTime;
 	
-	private long updatedDateTime;
+	private Long updatedDateTime;
 	
 	private boolean isRemoved;
 
@@ -37,19 +37,19 @@ public abstract class BaseEntity implements Serializable{
 		this.id = id;
 	}
 
-	public long getInsertedDateTime() {
+	public Long getInsertedDateTime() {
 		return insertedDateTime;
 	}
 
-	public void setInsertedDateTime(long insertedDateTime) {
+	public void setInsertedDateTime(Long insertedDateTime) {
 		this.insertedDateTime = insertedDateTime;
 	}
 
-	public long getUpdatedDateTime() {
+	public Long getUpdatedDateTime() {
 		return updatedDateTime;
 	}
 
-	public void setUpdatedDateTime(long updatedDateTime) {
+	public void setUpdatedDateTime(Long updatedDateTime) {
 		this.updatedDateTime = updatedDateTime;
 	}
 

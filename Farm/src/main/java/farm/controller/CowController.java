@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import farm.bl.AnimalBL;
-import farm.model.CowModel;
+import farm.model.animal.CowModel;
 import farm.result.FarmResult;
 import io.swagger.annotations.ApiOperation;
 
@@ -60,7 +60,6 @@ public class CowController {
 	public ResponseEntity<FarmResult> getAllCows(@RequestParam(name = "page", defaultValue = "0") int page,
 		      									 @RequestParam(name = "size", defaultValue = "100") int size,
 												 @RequestParam(name = "sort", defaultValue = "insertedDateTime") String orderBy) {
-		
 		try {
 			FarmResult result = animalsBL.getAllCows(page, size, orderBy);
 	

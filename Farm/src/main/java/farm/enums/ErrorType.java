@@ -6,11 +6,23 @@ public enum ErrorType {
 	AnimalNotExists,
 	AnimalNameAlreadyExists,
 	AnimalNameCannotBeEmpty,
+	AnimalModelIsEmpty,
 	AnimalNameCannotBeBiggerThanThreshold,
 	CannotUpdateCowWithBullModel,
 	CannotUpdateBullWithCowModel,
 	
 	// Sort
-	InvalidSortParameter
+	InvalidSortParameter,
+	
+	// Group
+	GroupNameCannotBeEmpty,
+	GroupNumberCannotBeEmpty,
+	GroupNameCannotBeBiggerThanThreshold,
+	GroupNumberCannotBeNegative,
+	GroupNumberCannotBeZeroItRelatedToDefaultGroup,
+	GroupNameAlreadyExists,
+	GroupNumberAlreadyExists,
+	GroupIdCannotBeEmpty,
+	GroupDoesNotExists
 	;
 }

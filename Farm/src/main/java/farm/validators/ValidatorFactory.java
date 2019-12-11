@@ -8,6 +8,7 @@ import farm.exception.FarmException;
 import farm.model.BaseModel;
 import farm.validators.animal.BullValidator;
 import farm.validators.animal.CowValidator;
+import farm.validators.group.GroupValidator;
 import farm.validators.sort.BaseSortValidator;
 
 @Component
@@ -18,6 +19,9 @@ public class ValidatorFactory {
 	
 	@Autowired
 	private BullValidator bullValidator;
+	
+	@Autowired
+	private GroupValidator groupValidator;
 	
 	public ValidatorFactory() {
 		
@@ -30,6 +34,8 @@ public class ValidatorFactory {
 			return bullValidator;
 		case cowModel:
 			return cowValidator;
+		case groupModel:
+			return groupValidator;
 		default:
 			throw new FarmException("ValidatorFactory cannot find model type " + model.type);
 		}

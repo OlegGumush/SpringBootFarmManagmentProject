@@ -5,9 +5,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import farm.bl.AnimalBL;
+import farm.bl.GroupBL;
 import farm.entity.animal.Animal;
 import farm.enums.ErrorType;
-import farm.model.AnimalModel;
+import farm.model.animal.AnimalModel;
 import farm.result.FarmResult;
 
 @Component
@@ -16,18 +17,19 @@ public abstract class AnimalValidator implements IAnimalValidator {
 	@Autowired
 	private AnimalBL animalBL;
 	
+	@Autowired
+	private GroupBL groupBL;
+	
 	public static final int ANIMAL_NAME_MAXIMUM_LENGTH = 20;
+	
 	
 	@Override
 	public FarmResult validateCreate(AnimalModel animalModel) {
 				
-		if(Strings.isEmpty(animalModel.AnimalName)) {
-			
-			return new FarmResult(ErrorType.AnimalNameCannotBeEmpty, "AnimalName");
-		}
+		FarmResult result = validateBase(animalModel);
 		
-		if(isValidAnimalNameLength(animalModel.AnimalName)) {
-			return new FarmResult(ErrorType.AnimalNameCannotBeBiggerThanThreshold, "AnimalName");
+		if(!result.isSucceeded()) {
+			return result;
 		}
 		
 		if(isAnimalExistsByName(animalModel.AnimalName)) {
@@ -44,12 +46,10 @@ public abstract class AnimalValidator implements IAnimalValidator {
 			return new FarmResult(ErrorType.AnimalNotExists);
 		}
 		
-		if(Strings.isEmpty(animalModel.AnimalName)) {
-			return new FarmResult(ErrorType.AnimalNameCannotBeEmpty, "AnimalName");
-		}
+		FarmResult result = validateBase(animalModel);
 		
-		if(isValidAnimalNameLength(animalModel.AnimalName)) {
-			return new FarmResult(ErrorType.AnimalNameCannotBeBiggerThanThreshold, "AnimalName");
+		if(!result.isSucceeded()) {
+			return result;
 		}
 		
 		if(isAnimalExistsByNameExceptId(animalModel.AnimalName, animal.getId())) {
@@ -61,7 +61,7 @@ public abstract class AnimalValidator implements IAnimalValidator {
 
 	@Override
 	public FarmResult validateDelete(AnimalModel model, Animal animal) {
-		return null;
+		return new FarmResult();
 	}
 	
 	private boolean isAnimalExistsByName(String animalName) {
@@ -73,8 +73,30 @@ public abstract class AnimalValidator implements IAnimalValidator {
 		
 		return animalBL.isAnimalExistsByNameExceptId(animalName, id);
 	}
-	
-	private boolean isValidAnimalNameLength(String animalName) {
-		return animalName.length() > ANIMAL_NAME_MAXIMUM_LENGTH;
+
+	private FarmResult validateBase(AnimalModel animalModel) {
+		
+		if (animalModel == null) {
+			return new FarmResult(ErrorType.AnimalModelIsEmpty, "AnimalName");
+		}
+		
+		if(Strings.isEmpty(animalModel.AnimalName)) {
+			
+			return new FarmResult(ErrorType.AnimalNameCannotBeEmpty, "AnimalName");
+		}
+		
+		if(animalModel.AnimalName.length() > ANIMAL_NAME_MAXIMUM_LENGTH) {
+			return new FarmResult(ErrorType.AnimalNameCannotBeBiggerThanThreshold, "AnimalName");
+		}
+		
+		if(animalModel.GroupId == null) {
+			return new FarmResult(ErrorType.GroupIdCannotBeEmpty, "GroupId");
+		}
+		
+		if(!groupBL.isGroupExistById(animalModel.GroupId)) {
+			return new FarmResult(ErrorType.GroupDoesNotExists, "GroupId");
+		}
+		
+		return new FarmResult();
 	}
 }
