@@ -11,7 +11,9 @@ import farm.bl.GroupBL;
 import farm.entity.animal.Animal;
 import farm.enums.ErrorType;
 import farm.error.FarmError;
-import farm.request_model.animal.AnimalModel;
+import farm.request_model.BaseAnimalModel;
+import farm.request_model.create_animal.CreateAnimalModel;
+import farm.request_model.update_animal.UpdateAnimalModel;
 
 @Component
 public abstract class AnimalValidator implements IAnimalValidator {
@@ -26,7 +28,7 @@ public abstract class AnimalValidator implements IAnimalValidator {
 	
 	
 	@Override
-	public ArrayList<FarmError> validateCreate(AnimalModel animalModel) {
+	public ArrayList<FarmError> validateCreate(CreateAnimalModel animalModel) {
 				
 		 ArrayList<FarmError> errors = validateBase(animalModel);
 		
@@ -34,14 +36,23 @@ public abstract class AnimalValidator implements IAnimalValidator {
 			return errors;
 		
 		} else if(isAnimalExistsByName(animalModel.AnimalName)) {
+			
 			errors.add(new FarmError(ErrorType.AnimalNameAlreadyExists, "AnimalName"));
+			
+		}  else if(animalModel.GroupId == null) {
+			
+			errors.add(new FarmError(ErrorType.GroupIdCannotBeEmpty, "GroupId"));
+			
+		} else if(!groupBL.isGroupExistById(animalModel.GroupId)) {
+			
+			errors.add(new FarmError(ErrorType.GroupNotNotExists, "GroupId"));
 		}
 		
 		return errors;
 	}
 
 	@Override
-	public ArrayList<FarmError> validateUpdate(AnimalModel animalModel, Animal animal) {
+	public ArrayList<FarmError> validateUpdate(UpdateAnimalModel animalModel, Animal animal) {
 		
 		 ArrayList<FarmError> errors = validateBase(animalModel);
 
@@ -74,7 +85,7 @@ public abstract class AnimalValidator implements IAnimalValidator {
 		return animalBL.isAnimalExistsByNameExceptId(animalName, id);
 	}
 
-	private ArrayList<FarmError> validateBase(AnimalModel animalModel) {
+	private ArrayList<FarmError> validateBase(BaseAnimalModel animalModel) {
 		
 		ArrayList<FarmError> errors = new ArrayList<>();
 		
@@ -90,13 +101,6 @@ public abstract class AnimalValidator implements IAnimalValidator {
 			
 			errors.add(new FarmError(ErrorType.AnimalNameCannotBeBiggerThanThreshold, "AnimalName"));
 			
-		} else if(animalModel.GroupId == null) {
-			
-			errors.add(new FarmError(ErrorType.GroupIdCannotBeEmpty, "GroupId"));
-			
-		} else if(!groupBL.isGroupExistById(animalModel.GroupId)) {
-			
-			errors.add(new FarmError(ErrorType.GroupNotNotExists, "GroupId"));
 		}
 		
 		return errors;

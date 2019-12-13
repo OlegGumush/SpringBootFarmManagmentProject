@@ -3,7 +3,6 @@ package farm.result;
 import java.io.Serializable;
 import java.util.ArrayList;
 
-import farm.enums.ErrorType;
 import farm.error.FarmError;
 
 public class FarmResult<T> implements Serializable {
@@ -25,12 +24,20 @@ public class FarmResult<T> implements Serializable {
 	
 	public FarmResult(ArrayList<FarmError> errors) {
 		this();
-		this.errors.addAll(errors);
-		this.isSucceeded = false;
+		if(errors.size() > 0) {
+			this.errors.addAll(errors);
+			this.isSucceeded = false;			
+		}
 	}
 	
-	public void addError(ErrorType error) {
-		this.errors.add(new FarmError(error));
+	public FarmResult(FarmError error) {
+		this();
+		this.errors.add(error);
+		this.isSucceeded = false;			
+	}
+	
+	public void addError(FarmError error) {
+		this.errors.add(error);
 		this.isSucceeded = false;
 	}
 

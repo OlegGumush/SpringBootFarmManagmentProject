@@ -8,12 +8,12 @@ import farm.entity.animal.Animal;
 import farm.enums.AnimalSex;
 import farm.enums.ErrorType;
 import farm.error.FarmError;
-import farm.request_model.animal.AnimalModel;
+import farm.request_model.update_animal.UpdateAnimalModel;
 
 @Component
 public class BullValidator extends AnimalValidator {
 
-	public ArrayList<FarmError> validateUpdate(AnimalModel animalModel, Animal animal) {
+	public ArrayList<FarmError> validateUpdate(UpdateAnimalModel animalModel, Animal animal) {
 		
 		ArrayList<FarmError> errors = super.validateUpdate(animalModel, animal);
 		
@@ -22,7 +22,7 @@ public class BullValidator extends AnimalValidator {
 		}
 		
 		if(animal.getAnimalSex().equals(AnimalSex.Female)) {
-			errors.add(new FarmError(ErrorType.CannotUpdateBullWithCowModel));
+			errors.add(new FarmError(ErrorType.IdRelatedToCow));
 		}
 		
 		return errors;

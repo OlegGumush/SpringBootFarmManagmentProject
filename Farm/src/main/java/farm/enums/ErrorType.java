@@ -8,8 +8,8 @@ public enum ErrorType {
 	AnimalNameCannotBeEmpty,
 	AnimalModelIsEmpty,
 	AnimalNameCannotBeBiggerThanThreshold,
-	CannotUpdateCowWithBullModel,
-	CannotUpdateBullWithCowModel,
+	IdRelatedToCow,
+	IdRelatedToBull,
 	
 	// Sort
 	InvalidSortParameter,

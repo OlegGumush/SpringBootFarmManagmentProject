@@ -1,20 +1,17 @@
-package farm.request_model.animal;
+package farm.request_model.create_animal;
 
 import farm.enums.ModelType;
-import farm.request_model.BaseModel;
+import farm.request_model.BaseAnimalModel;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 
 @ApiModel
-public abstract class AnimalModel extends BaseModel {
-
-    @ApiModelProperty(position = 1, required = true, allowableValues = "range[1, 20]")
-	public String AnimalName;
+public abstract class CreateAnimalModel extends BaseAnimalModel {
     
-    @ApiModelProperty(position = 2, required = true)
+    @ApiModelProperty(required = true)
     public Long GroupId;
 
-	public AnimalModel(ModelType type) {
+	public CreateAnimalModel(ModelType type) {
 		super(type);
 	}
 }

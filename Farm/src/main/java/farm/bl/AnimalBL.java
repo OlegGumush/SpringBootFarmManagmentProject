@@ -14,11 +14,15 @@ import farm.entity.animal.Animal;
 import farm.entity.animal.Bull;
 import farm.entity.animal.Cow;
 import farm.enums.EntityType;
+import farm.enums.ErrorType;
 import farm.error.FarmError;
 import farm.repository.AnimalRepository;
-import farm.request_model.animal.AnimalModel;
-import farm.request_model.animal.BullModel;
-import farm.request_model.animal.CowModel;
+import farm.request_model.create_animal.CerateBullModel;
+import farm.request_model.create_animal.CreateAnimalModel;
+import farm.request_model.create_animal.CreateCowModel;
+import farm.request_model.update_animal.UpdateAnimalModel;
+import farm.request_model.update_animal.UpdateBullModel;
+import farm.request_model.update_animal.UpdateCowModel;
 import farm.result.FarmResult;
 import farm.validators.ValidatorFactory;
 import farm.validators.animal.IAnimalValidator;
@@ -47,6 +51,10 @@ public class AnimalBL {
 				
 		Animal animal =  animalRepository.findById(id);
 
+		if (animal == null) {
+			return new FarmResult<Animal>(new FarmError(ErrorType.AnimalNotExists));
+		}
+		
 		return new FarmResult<>(animal);
 	}
 	
@@ -54,10 +62,14 @@ public class AnimalBL {
 		
 		Animal animal = animalRepository.removeById(id);
 
+		if (animal == null) {
+			return new FarmResult<Animal>(new FarmError(ErrorType.AnimalNotExists));
+		}
+		
 		return new FarmResult<>(animal);
 	}
 
-	public FarmResult<Cow> createCow(CowModel cowModel) {
+	public FarmResult<Cow> createCow(CreateCowModel cowModel) {
 		
 		IAnimalValidator animalValidator = (IAnimalValidator) validatorFactory.getValidator(EntityType.Cow);
 		ArrayList<FarmError> errors = animalValidator.validateCreate(cowModel);
@@ -75,7 +87,7 @@ public class AnimalBL {
 		return new FarmResult<>(cow);
 	}
 	
-	public FarmResult<Bull> createBull(BullModel bullModel) {
+	public FarmResult<Bull> createBull(CerateBullModel bullModel) {
 		
 		IAnimalValidator animalValidator = (IAnimalValidator) validatorFactory.getValidator(EntityType.Bull);
 		ArrayList<FarmError> errors = animalValidator.validateCreate(bullModel);
@@ -93,7 +105,7 @@ public class AnimalBL {
 		return new FarmResult<>(bull);
 	}
 	
-	public FarmResult<Cow> updateCow(CowModel cowModel, long id) {
+	public FarmResult<Cow> updateCow(UpdateCowModel cowModel, long id) {
 		
 		FarmResult<Animal> result = getAnimalById(id);
 		Animal cow = result.getResult();
@@ -101,7 +113,7 @@ public class AnimalBL {
 		IAnimalValidator animalValidator = (IAnimalValidator) validatorFactory.getValidator(EntityType.Cow);
 		ArrayList<FarmError> errors = animalValidator.validateUpdate(cowModel, cow);
 		
-		if(!result.isSucceeded()) {
+		if(!errors.isEmpty()) {
 			return new FarmResult<>(errors);
 		}
 		
@@ -112,7 +124,7 @@ public class AnimalBL {
 		return new FarmResult<>((Cow)cow);
 	}
 	
-	public FarmResult<Bull> updateBull(BullModel bullModel, long id) {
+	public FarmResult<Bull> updateBull(UpdateBullModel bullModel, long id) {
 		
 		FarmResult<Animal> result = getAnimalById(id);
 		Animal bull = result.getResult();
@@ -155,13 +167,12 @@ public class AnimalBL {
 		return animalRepository.isAnimalExistsByNameExceptId(animalName, 0);
 	}
 
-	private void setUpdateCommonFields(AnimalModel animalModel, Animal animal) {
+	private void setUpdateCommonFields(UpdateAnimalModel animalModel, Animal animal) {
 		
 		animal.setAnimalName(animalModel.AnimalName);
-		animal.setGroup(groupBL.findGroupById(animalModel.GroupId));
 	}
 	
-	private void setCreateCommonFields(AnimalModel animalModel, Animal animal) {
+	private void setCreateCommonFields(CreateAnimalModel animalModel, Animal animal) {
 
 		animal.setAnimalName(animalModel.AnimalName);
 		animal.setGroup(groupBL.findGroupById(animalModel.GroupId));

@@ -2,7 +2,10 @@ package farm.response_model;
 
 import java.io.Serializable;
 
-public class BaseResponseModel implements Serializable{
+import io.swagger.annotations.ApiModel;
+
+@ApiModel
+public class BaseResponseModel implements Serializable {
 	
 	public Long Id;
 	

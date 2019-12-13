@@ -1,6 +1,7 @@
 package farm.controller;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -14,7 +15,9 @@ import org.springframework.web.bind.annotation.RestController;
 
 import farm.bl.AnimalBL;
 import farm.entity.animal.Cow;
-import farm.request_model.animal.CowModel;
+import farm.request_model.create_animal.CreateCowModel;
+import farm.request_model.update_animal.UpdateCowModel;
+import farm.response_model.animal.CowResponseModel;
 import farm.result.FarmResult;
 import io.swagger.annotations.ApiOperation;
 
@@ -26,33 +29,34 @@ public class CowController {
 	
 	@RequestMapping(value = "/cows", method = RequestMethod.POST)
 	@ApiOperation(value = "Create cow", notes="notes", nickname = "CreateCow")
-	public ResponseEntity<FarmResult<Cow>> createCow(@RequestBody CowModel cowModel) {
+	public ResponseEntity<FarmResult<CowResponseModel>> createCow(@RequestBody CreateCowModel cowModel) {
 		
 		try {
 			FarmResult<Cow> result = animalsBL.createCow(cowModel);
 			 
-			if (result.isSucceeded()) {
-				return new ResponseEntity<FarmResult<Cow>>(result, HttpStatus.CREATED);
+			if (!result.isSucceeded()) {
+				return new ResponseEntity<>(new FarmResult<>(result.getErrors()), HttpStatus.BAD_REQUEST);
 			}
 	
-			return new ResponseEntity<FarmResult<Cow>>(result, HttpStatus.BAD_REQUEST);
+			return new ResponseEntity<>(new FarmResult<>(new CowResponseModel(result.getResult())), HttpStatus.CREATED);
 		} catch (Exception e) {
-			return new ResponseEntity<FarmResult<Cow>>(HttpStatus.INTERNAL_SERVER_ERROR);
+			return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 	}
 	
 	@RequestMapping(value = "/cows/{id}", method = RequestMethod.PUT)
 	@ApiOperation(value = "Update cow", notes="notes", nickname = "UpdateCow")
-	public ResponseEntity<FarmResult<Cow>> updateCow(@RequestBody CowModel cowModel, @PathVariable long id) {
+	public ResponseEntity<FarmResult<CowResponseModel>> updateCow(@RequestBody UpdateCowModel cowModel, @PathVariable long id) {
 		
 		try {
 			FarmResult<Cow> result = animalsBL.updateCow(cowModel, id);
 			
-			if (result.isSucceeded()) {
-				return new ResponseEntity<>(result, HttpStatus.OK);
+			if (!result.isSucceeded()) {
+				return new ResponseEntity<>(new FarmResult<>(result.getErrors()), HttpStatus.BAD_REQUEST);
 			}
 			
-			return new ResponseEntity<>(result, HttpStatus.BAD_REQUEST);
+			return new ResponseEntity<>(new FarmResult<>(new CowResponseModel(result.getResult())), HttpStatus.OK);
+		
 		} catch (Exception e) {
 			return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
 		}
@@ -60,17 +64,19 @@ public class CowController {
 	
 	@RequestMapping(value = "/cows", params = { "page", "size", "sort" }, method = RequestMethod.GET)
 	@ApiOperation(value = "Get all cows", notes="notes", nickname = "GetAllCows")
-	public ResponseEntity<FarmResult<List<Cow>>> getAllCows(@RequestParam(name = "page", defaultValue = "0") int page,
+	public ResponseEntity<FarmResult<List<CowResponseModel>>> getAllCows(@RequestParam(name = "page", defaultValue = "0") int page,
 		      									 @RequestParam(name = "size", defaultValue = "100") int size,
 												 @RequestParam(name = "sort", defaultValue = "insertedDateTime") String orderBy) {
 		try {
 			FarmResult<List<Cow>> result = animalsBL.getAllCows(page, size, orderBy);
 	
-			if(result.isSucceeded()) {
-				return new ResponseEntity<>(result, HttpStatus.OK);			
+			if(!result.isSucceeded()) {
+				return new ResponseEntity<>(new FarmResult<>(result.getErrors()), HttpStatus.BAD_REQUEST);	
 			}	
 			
-			return new ResponseEntity<>(result, HttpStatus.BAD_REQUEST);	
+			List<CowResponseModel> bulls = result.getResult().stream().map(CowResponseModel::new).collect(Collectors.toList());
+			return new ResponseEntity<>(new FarmResult<>(bulls), HttpStatus.OK);	
+			
 		} catch (Exception e) {
 			return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
 		}

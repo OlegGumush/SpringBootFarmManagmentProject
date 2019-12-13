@@ -1,12 +1,12 @@
-package farm.request_model.animal;
+package farm.request_model.create_animal;
 
 import farm.enums.ModelType;
 import io.swagger.annotations.ApiModel;
 
 @ApiModel
-public class BullModel extends AnimalModel {
+public class CerateBullModel extends CreateAnimalModel {
 
-	public BullModel() {
+	public CerateBullModel() {
 		super(ModelType.bullModel);
 	}
 }

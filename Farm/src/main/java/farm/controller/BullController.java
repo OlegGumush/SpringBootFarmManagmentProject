@@ -1,6 +1,7 @@
 package farm.controller;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -14,7 +15,9 @@ import org.springframework.web.bind.annotation.RestController;
 
 import farm.bl.AnimalBL;
 import farm.entity.animal.Bull;
-import farm.request_model.animal.BullModel;
+import farm.request_model.create_animal.CerateBullModel;
+import farm.request_model.update_animal.UpdateBullModel;
+import farm.response_model.animal.BullResponseModel;
 import farm.result.FarmResult;
 import io.swagger.annotations.ApiOperation;
 
@@ -26,16 +29,16 @@ public class BullController {
 	
 	@RequestMapping(value = "/bulls", method = RequestMethod.POST)
 	@ApiOperation(value = "Create bull", notes="notes", nickname = "CreateBull")
-	public ResponseEntity<FarmResult<Bull>> createBull(@RequestBody BullModel bullModel) {
+	public ResponseEntity<FarmResult<BullResponseModel>> createBull(@RequestBody CerateBullModel bullModel) {
 		
 		try {
 			FarmResult<Bull> result = animalsBL.createBull(bullModel);
 			
-			if (result.isSucceeded()) {
-				return new ResponseEntity<>(result, HttpStatus.CREATED);
+			if (!result.isSucceeded()) {
+				return new ResponseEntity<>(new FarmResult<>(result.getErrors()), HttpStatus.BAD_REQUEST);
 			}
 			
-			return new ResponseEntity<>(result, HttpStatus.BAD_REQUEST);
+			return new ResponseEntity<>(new FarmResult<>(new BullResponseModel(result.getResult())), HttpStatus.CREATED);
 			
 		} catch (Exception e) {
 			return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
@@ -44,16 +47,16 @@ public class BullController {
 	
 	@RequestMapping(value = "/bulls/{id}", method = RequestMethod.PUT)
 	@ApiOperation(value = "Update bull", notes="notes", nickname = "UpdateBull")
-	public ResponseEntity<FarmResult<Bull>> updateBull(@RequestBody BullModel bullModel, @PathVariable long id) {
+	public ResponseEntity<FarmResult<BullResponseModel>> updateBull(@RequestBody UpdateBullModel bullModel, @PathVariable long id) {
 		
 		try {
 			FarmResult<Bull> result = animalsBL.updateBull(bullModel, id);
 			
-			if (result.isSucceeded()) {
-				return new ResponseEntity<>(result, HttpStatus.OK);
+			if (!result.isSucceeded()) {
+				return new ResponseEntity<>(new FarmResult<>(result.getErrors()), HttpStatus.BAD_REQUEST);			
 			}
 			
-			return new ResponseEntity<>(result, HttpStatus.BAD_REQUEST);			
+			return new ResponseEntity<>(new FarmResult<>(new BullResponseModel(result.getResult())), HttpStatus.OK);
 		} catch (Exception e) {
 			return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
 		}
@@ -61,17 +64,19 @@ public class BullController {
 	
 	@RequestMapping(value = "/bulls", params = { "page", "size", "sort" }, method = RequestMethod.GET)
 	@ApiOperation(value = "Get all bulls", notes="notes", nickname = "GetAllBulls")
-	public ResponseEntity<FarmResult<List<Bull>>> getAllBulls(@RequestParam(name = "page", defaultValue = "0") int page,
+	public ResponseEntity<FarmResult<List<BullResponseModel>>> getAllBulls(@RequestParam(name = "page", defaultValue = "0") int page,
 		    								      @RequestParam(name = "size", defaultValue = "100") int size,
 												  @RequestParam(name = "sort", defaultValue = "insertedDateTime") String orderBy) {
 		try {
 			FarmResult<List<Bull>> result = animalsBL.getAllBulls(page, size, orderBy);
 	
-			if(result.isSucceeded()) {
-				return new ResponseEntity<>(result, HttpStatus.OK);			
+			if(!result.isSucceeded()) {
+				return new ResponseEntity<>(new FarmResult<>(result.getErrors()), HttpStatus.BAD_REQUEST);
 			}	
 			
-			return new ResponseEntity<>(result, HttpStatus.BAD_REQUEST);
+			List<BullResponseModel> bulls = result.getResult().stream().map(BullResponseModel::new).collect(Collectors.toList());
+			
+			return new ResponseEntity<>(new FarmResult<>(bulls), HttpStatus.OK);			
 		} catch (Exception e) {
 			return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
 		}

@@ -104,5 +104,4 @@ public class GroupBL {
 		group.setGroupName(groupModel.GroupName);
 		group.setGroupNumber(groupModel.GroupNumber);
 	}
-
 }

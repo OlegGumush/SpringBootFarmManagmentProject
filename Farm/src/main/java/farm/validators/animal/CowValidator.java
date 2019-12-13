@@ -8,7 +8,7 @@ import farm.entity.animal.Animal;
 import farm.enums.AnimalSex;
 import farm.enums.ErrorType;
 import farm.error.FarmError;
-import farm.request_model.animal.AnimalModel;
+import farm.request_model.update_animal.UpdateAnimalModel;
 
 @Component
 public class CowValidator extends AnimalValidator {
@@ -18,7 +18,7 @@ public class CowValidator extends AnimalValidator {
 	}
 	
 	@Override
-	public ArrayList<FarmError> validateUpdate(AnimalModel animalModel, Animal animal) {
+	public ArrayList<FarmError> validateUpdate(UpdateAnimalModel animalModel, Animal animal) {
 		
 		ArrayList<FarmError> errors = super.validateUpdate(animalModel, animal);
 		
@@ -27,7 +27,7 @@ public class CowValidator extends AnimalValidator {
 		}
 		
 		if(animal.getAnimalSex().equals(AnimalSex.Male)) {
-			errors.add(new FarmError(ErrorType.CannotUpdateCowWithBullModel));
+			errors.add(new FarmError(ErrorType.IdRelatedToBull));
 		}
 		
 		return errors;

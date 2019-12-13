@@ -8,9 +8,9 @@ import farm.response_model.group.GroupResponseModel;
 public class AnimalResponseModel extends BaseResponseModel {
 
 	public String AnimalName;
-	
+
 	public AnimalSex AnimalSex;
-	
+
 	public GroupResponseModel Group;
 	
 	public AnimalResponseModel(Animal animal) {
