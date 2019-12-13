@@ -1,6 +1,5 @@
 package farm.bl;
 
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -15,15 +14,14 @@ import farm.entity.animal.Animal;
 import farm.entity.animal.Bull;
 import farm.entity.animal.Cow;
 import farm.enums.EntityType;
-import farm.model.animal.AnimalModel;
-import farm.model.animal.BullModel;
-import farm.model.animal.CowModel;
+import farm.error.FarmError;
 import farm.repository.AnimalRepository;
-import farm.response_model.animal.AnimalResponseModel;
+import farm.request_model.animal.AnimalModel;
+import farm.request_model.animal.BullModel;
+import farm.request_model.animal.CowModel;
 import farm.result.FarmResult;
 import farm.validators.ValidatorFactory;
 import farm.validators.animal.IAnimalValidator;
-import farm.validators.sort.BaseSortValidator;
 
 @Service
 @Transactional(value = TxType.REQUIRED)
@@ -38,55 +36,34 @@ public class AnimalBL {
 	@Autowired
 	protected GroupBL groupBL;
 	
-	public FarmResult getAllAnimals(int page, int size, String orderBy) {
-		
-		BaseSortValidator sortValidator = (BaseSortValidator) validatorFactory.getSortValidator(EntityType.Animal);
-		FarmResult result = sortValidator.validateSort(orderBy);
-		
-		if(!result.isSucceeded()) {
-			return result;
-		}
+	public FarmResult<List<Animal>> getAllAnimals(int page, int size, String orderBy) {
 		
 		List<Animal> animals = (ArrayList<Animal>) animalRepository.findAllWithPageAndOrder(page, size, orderBy);	
 				
-		result.setResult((Serializable) animals.stream().map(AnimalResponseModel::new).collect(Collectors.toList()));	
-		return result;
+		return new FarmResult<>(animals);
 	}
 	
-	public FarmResult getAnimalById(long id) {
-		
-		FarmResult result = new FarmResult();
-		
+	public FarmResult<Animal> getAnimalById(long id) {
+				
 		Animal animal =  animalRepository.findById(id);
 
-		if(animal == null) {
-			result.setSucceeded(false);;			
-		}
-		
-		result.setResult(animal);
-		return result;
+		return new FarmResult<>(animal);
 	}
 	
-	public FarmResult deleteAnimalById(long id) {
+	public FarmResult<Animal> deleteAnimalById(long id) {
 		
-		FarmResult result = new FarmResult();
-		
-		if (animalRepository.findById(id) != null) {
-			animalRepository.removeById(id);			
-			result.setResult(true);
-		} 
-		
-		result.setResult(false, false);
-		return result;
+		Animal animal = animalRepository.removeById(id);
+
+		return new FarmResult<>(animal);
 	}
 
-	public FarmResult createCow(CowModel cowModel) {
+	public FarmResult<Cow> createCow(CowModel cowModel) {
 		
-		IAnimalValidator animalValidator = (IAnimalValidator) validatorFactory.getValidator(cowModel);
-		FarmResult result = animalValidator.validateCreate(cowModel);
+		IAnimalValidator animalValidator = (IAnimalValidator) validatorFactory.getValidator(EntityType.Cow);
+		ArrayList<FarmError> errors = animalValidator.validateCreate(cowModel);
 		
-		if(!result.isSucceeded()) {
-			return result;
+		if(!errors.isEmpty()) {
+			return new FarmResult<>(errors);
 		}
 		
 		Cow cow = new Cow();   
@@ -95,98 +72,77 @@ public class AnimalBL {
 		
 		animalRepository.insert(cow);
 		
-		result.setResult(cow.getId());
-		return result;
+		return new FarmResult<>(cow);
 	}
 	
-	public FarmResult createBull(BullModel bullModel) {
+	public FarmResult<Bull> createBull(BullModel bullModel) {
 		
-		IAnimalValidator animalValidator = (IAnimalValidator) validatorFactory.getValidator(bullModel);
-		FarmResult result = animalValidator.validateCreate(bullModel);
+		IAnimalValidator animalValidator = (IAnimalValidator) validatorFactory.getValidator(EntityType.Bull);
+		ArrayList<FarmError> errors = animalValidator.validateCreate(bullModel);
 		
-		if(!result.isSucceeded()) {
-			return result;
+		if(!errors.isEmpty()) {
+			return new FarmResult<>(errors);
 		}
 		
-		Animal bull = new Bull();
+		Bull bull = new Bull();
 		
 		setCreateCommonFields(bullModel, bull);
 
 		animalRepository.insert(bull);
 		
-		result.setResult(bull.getId());
-		return result;
+		return new FarmResult<>(bull);
 	}
 	
-	public FarmResult updateCow(CowModel cowModel, long id) {
+	public FarmResult<Cow> updateCow(CowModel cowModel, long id) {
 		
-		FarmResult result = getAnimalById(id);
-		Animal cow = (Animal)result.getResult();
+		FarmResult<Animal> result = getAnimalById(id);
+		Animal cow = result.getResult();
 		
-		IAnimalValidator animalValidator = (IAnimalValidator) validatorFactory.getValidator(cowModel);
-		result = animalValidator.validateUpdate(cowModel, cow);
+		IAnimalValidator animalValidator = (IAnimalValidator) validatorFactory.getValidator(EntityType.Cow);
+		ArrayList<FarmError> errors = animalValidator.validateUpdate(cowModel, cow);
 		
 		if(!result.isSucceeded()) {
-			return result;
+			return new FarmResult<>(errors);
 		}
 		
 		setUpdateCommonFields(cowModel, cow);
 		
 		animalRepository.update(cow);
 		
-		result.setResult(cow.getId());
-		return result;
+		return new FarmResult<>((Cow)cow);
 	}
 	
-	public FarmResult updateBull(BullModel bullModel, long id) {
+	public FarmResult<Bull> updateBull(BullModel bullModel, long id) {
 		
-		FarmResult result = getAnimalById(id);
-		Animal bull = (Bull)result.getResult();
+		FarmResult<Animal> result = getAnimalById(id);
+		Animal bull = result.getResult();
 		
-		IAnimalValidator animalValidator = (IAnimalValidator) validatorFactory.getValidator(bullModel);
-		result = animalValidator.validateUpdate(bullModel, bull);
+		IAnimalValidator animalValidator = (IAnimalValidator) validatorFactory.getValidator(EntityType.Bull);
+		ArrayList<FarmError> errors = animalValidator.validateUpdate(bullModel, bull);
 		
-		if(!result.isSucceeded()) {
-			return result;
+		if(!errors.isEmpty()) {
+			return new FarmResult<>(errors);
 		}
 		
 		setUpdateCommonFields(bullModel, bull);
 		
 		animalRepository.update(bull);
 		
-		result.setResult(bull.getId());
-		return result;
+		return new FarmResult<Bull>((Bull)bull);
 	}
 
-	public FarmResult getAllCows(int page, int size, String orderBy) {
+	public FarmResult<List<Cow>> getAllCows(int page, int size, String orderBy) {
 
-		
-		BaseSortValidator sortValidator = (BaseSortValidator) validatorFactory.getSortValidator(EntityType.Cow);
-		FarmResult result = sortValidator.validateSort(orderBy);
-		
-		if(!result.isSucceeded()) {
-			return result;
-		}
-		
 		List<Animal> animals = (ArrayList<Animal>) animalRepository.findAllCows(page, size, orderBy);	
-		result.setResult((Serializable) animals);
 		
-		return result;
+		return new FarmResult<>(animals.stream().map(animal -> (Cow)animal).collect(Collectors.toList()));
 	}
 
-	public FarmResult getAllBulls(int page, int size, String orderBy) {
-		
-		BaseSortValidator sortValidator = (BaseSortValidator) validatorFactory.getSortValidator(EntityType.Bull);
-		FarmResult result = sortValidator.validateSort(orderBy);
-		
-		if(!result.isSucceeded()) {
-			return result;
-		}
-		
+	public FarmResult<List<Bull>> getAllBulls(int page, int size, String orderBy) {
+
 		List<Animal> animals = (ArrayList<Animal>) animalRepository.findAllBulls(page, size, orderBy);	
-		result.setResult((Serializable) animals);
 		
-		return result;
+		return new FarmResult<>(animals.stream().map(animal -> (Bull)animal).collect(Collectors.toList()));
 	}
 	
 	public boolean isAnimalExistsByNameExceptId(String animalName, long id) {
@@ -202,6 +158,7 @@ public class AnimalBL {
 	private void setUpdateCommonFields(AnimalModel animalModel, Animal animal) {
 		
 		animal.setAnimalName(animalModel.AnimalName);
+		animal.setGroup(groupBL.findGroupById(animalModel.GroupId));
 	}
 	
 	private void setCreateCommonFields(AnimalModel animalModel, Animal animal) {

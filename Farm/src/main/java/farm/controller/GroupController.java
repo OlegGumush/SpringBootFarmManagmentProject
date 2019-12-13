@@ -3,13 +3,15 @@ package farm.controller;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import farm.bl.GroupBL;
-import farm.model.group.GroupModel;
+import farm.entity.group.Group;
+import farm.request_model.group.GroupModel;
 import farm.result.FarmResult;
 import io.swagger.annotations.ApiOperation;
 
@@ -21,19 +23,36 @@ public class GroupController {
 	
 	@RequestMapping(value = "/groups", method = RequestMethod.POST)
 	@ApiOperation(value = "Create group", notes="notes", nickname = "CreateGroup")
-	public ResponseEntity<FarmResult> createGroup(@RequestBody GroupModel groupModel) {
+	public ResponseEntity<FarmResult<Group>> createGroup(@RequestBody GroupModel groupModel) {
 		
 		try {
-			FarmResult result = groupBL.createGroup(groupModel);
+			FarmResult<Group> result = groupBL.createGroup(groupModel);
 			
 			if (result.isSucceeded()) {
-				return new ResponseEntity<FarmResult>(result, HttpStatus.CREATED);
+				return new ResponseEntity<>(result, HttpStatus.CREATED);
 			}
 			
-			return new ResponseEntity<FarmResult>(result, HttpStatus.BAD_REQUEST);
+			return new ResponseEntity<>(result, HttpStatus.BAD_REQUEST);
 			
 		} catch (Exception e) {
-			return new ResponseEntity<FarmResult>(HttpStatus.INTERNAL_SERVER_ERROR);
+			return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+	}
+	
+	@RequestMapping(value = "/groups/{id}", method = RequestMethod.PUT)
+	@ApiOperation(value = "Update group", notes="notes", nickname = "UpdateGroup")
+	public ResponseEntity<FarmResult<Group>> updateGroup(@RequestBody GroupModel groupModel, @PathVariable long id) {
+		
+		try {
+			FarmResult<Group> result = groupBL.updateGroup(groupModel, id);
+			
+			if (result.isSucceeded()) {
+				return new ResponseEntity<>(result, HttpStatus.OK);
+			}
+			
+			return new ResponseEntity<>(result, HttpStatus.BAD_REQUEST);			
+		} catch (Exception e) {
+			return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 	}
 }

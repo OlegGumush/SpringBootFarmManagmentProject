@@ -23,6 +23,6 @@ public enum ErrorType {
 	GroupNameAlreadyExists,
 	GroupNumberAlreadyExists,
 	GroupIdCannotBeEmpty,
-	GroupDoesNotExists
+	GroupNotNotExists
 	;
 }

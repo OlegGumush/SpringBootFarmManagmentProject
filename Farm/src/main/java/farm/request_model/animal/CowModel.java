@@ -1,4 +1,4 @@
-package farm.model.animal;
+package farm.request_model.animal;
 
 import farm.enums.ModelType;
 import io.swagger.annotations.ApiModel;

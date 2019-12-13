@@ -1,5 +1,7 @@
 package farm.validators.group;
 
+import java.util.ArrayList;
+
 import org.apache.logging.log4j.util.Strings;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -7,8 +9,8 @@ import org.springframework.stereotype.Component;
 import farm.bl.GroupBL;
 import farm.entity.group.Group;
 import farm.enums.ErrorType;
-import farm.model.group.GroupModel;
-import farm.result.FarmResult;
+import farm.error.FarmError;
+import farm.request_model.group.GroupModel;
 
 @Component
 public class GroupValidator implements IGroupValidator {
@@ -19,63 +21,81 @@ public class GroupValidator implements IGroupValidator {
 	public static final int GROUP_NAME_MAXIMUM_LENGTH = 20;
 	
 	@Override
-	public FarmResult validateCreate(GroupModel groupModel) {
+	public ArrayList<FarmError> validateCreate(GroupModel groupModel) {
 		
-		FarmResult result = validateBase(groupModel);
+		ArrayList<FarmError> errors = validateBase(groupModel);
 		
-		if(!result.isSucceeded()) {
+		if(!errors.isEmpty()) {
 			
-			return result;
+			return errors;
 		}
 		
 		if (groupBL.isGroupExistsByName(groupModel.GroupName)) {
 			
-			return new FarmResult(ErrorType.GroupNameAlreadyExists, "GroupNumber");
-		}
-		
-		if (groupBL.isGroupExistsByNumber(groupModel.GroupNumber)) {
+			errors.add(new FarmError(ErrorType.GroupNameAlreadyExists, "GroupNumber"));
 			
-			return new FarmResult(ErrorType.GroupNumberAlreadyExists, "GroupNumber");
+		} else if (groupBL.isGroupExistsByNumber(groupModel.GroupNumber)) {
+			
+			errors.add(new FarmError(ErrorType.GroupNumberAlreadyExists, "GroupNumber"));
 		}
 		
-		return new FarmResult();
-	}
+		return errors;
+	}  
 
 	@Override
-	public FarmResult validateUpdate(GroupModel model, Group animal) {
+	public ArrayList<FarmError> validateUpdate(GroupModel groupModel, Group group) {
 		
-		return new FarmResult();
-	}
+		ArrayList<FarmError> errors = new ArrayList<>();
 
-	@Override
-	public FarmResult validateDelete(GroupModel model, Group animal) {
-		
-		return new FarmResult();
-	}
-
-	private FarmResult validateBase(GroupModel groupModel) {
-		
-		if(groupModel.GroupNumber == null) {		
-			return new FarmResult(ErrorType.GroupNumberCannotBeEmpty, "GroupNumber");
-		}
-		
-		if(Strings.isEmpty(groupModel.GroupName)) {
+		if (group == null) {		
 			
-			return new FarmResult(ErrorType.GroupNameCannotBeEmpty, "GroupName");
+			errors.add(new FarmError(ErrorType.GroupNotNotExists, "Id"));
 		}
 		
-		if (groupModel.GroupName.length() > GROUP_NAME_MAXIMUM_LENGTH) {
-			return new FarmResult(ErrorType.GroupNameCannotBeBiggerThanThreshold, "GroupName");
+		errors = validateBase(groupModel);
+		
+		if(!errors.isEmpty()) {
+			
+			return errors;
 		}
 		
-		if (groupModel.GroupNumber == 0) {
-			return new FarmResult(ErrorType.GroupNumberCannotBeZeroItRelatedToDefaultGroup, "GroupNumber");
+		if (groupBL.isGroupExistsByNameExceptId(groupModel.GroupName, group.getId())) {
+			
+			errors.add(new FarmError(ErrorType.GroupNameAlreadyExists, "GroupName"));
+			
+		} else if (groupBL.isGroupExistsByNumberExceptId(groupModel.GroupNumber, group.getId())) {
+			
+			errors.add(new FarmError(ErrorType.GroupNumberAlreadyExists, "GroupNumber"));
 		}
 		
-		if (groupModel.GroupNumber < 0) {
-			return new FarmResult(ErrorType.GroupNumberCannotBeNegative, "GroupNumber");
+		return errors;
+	}
+
+	private ArrayList<FarmError> validateBase(GroupModel groupModel) {
+		
+		ArrayList<FarmError> errors = new ArrayList<>();
+		
+		if(groupModel.GroupNumber == null) {
+			
+			errors.add(new FarmError(ErrorType.GroupNumberCannotBeEmpty, "GroupNumber"));
+			
+		} else if(Strings.isEmpty(groupModel.GroupName)) {
+			
+			errors.add(new FarmError(ErrorType.GroupNameCannotBeEmpty, "GroupName"));
+			
+		} else if (groupModel.GroupName.length() > GROUP_NAME_MAXIMUM_LENGTH) {
+			
+			errors.add(new FarmError(ErrorType.GroupNameCannotBeBiggerThanThreshold, "GroupName"));
+			
+		} else if (groupModel.GroupNumber == 0) {
+			
+			errors.add(new FarmError(ErrorType.GroupNumberCannotBeZeroItRelatedToDefaultGroup, "GroupNumber"));
+			
+		} else if (groupModel.GroupNumber < 0) {
+			
+			errors.add(new FarmError(ErrorType.GroupNumberCannotBeNegative, "GroupNumber"));
 		}
 		
-		return new FarmResult();
+		return errors;
 	}
 }

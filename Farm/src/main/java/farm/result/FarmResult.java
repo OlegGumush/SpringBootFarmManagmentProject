@@ -6,9 +6,9 @@ import java.util.ArrayList;
 import farm.enums.ErrorType;
 import farm.error.FarmError;
 
-public class FarmResult implements Serializable {
+public class FarmResult<T> implements Serializable {
 
-	private Serializable result;
+	private T result;
 	private boolean isSucceeded;
 	private ArrayList<FarmError> errors;
 	
@@ -17,26 +17,15 @@ public class FarmResult implements Serializable {
 		this.errors = new ArrayList<>();
 		this.isSucceeded = true;
 	}
-	
-	public FarmResult(long entityId) {
+
+	public FarmResult(T result) {
 		this();
-		this.result = entityId;
+		this.result = result;
 	}
 	
-	public FarmResult(boolean isSucceeded) {
+	public FarmResult(ArrayList<FarmError> errors) {
 		this();
-		this.isSucceeded = isSucceeded;
-	}
-	
-	public FarmResult(ErrorType error) {
-		this();
-		this.errors.add(new FarmError(error));
-		this.isSucceeded = false;
-	}
-	
-	public FarmResult(ErrorType error, String fieldName) {
-		this();
-		this.errors.add(new FarmError(error, fieldName));
+		this.errors.addAll(errors);
 		this.isSucceeded = false;
 	}
 	
@@ -44,10 +33,13 @@ public class FarmResult implements Serializable {
 		this.errors.add(new FarmError(error));
 		this.isSucceeded = false;
 	}
-	
-	public void addError(ErrorType error, String fieldName) {
-		this.errors.add(new FarmError(error, fieldName));
-		this.isSucceeded = false;
+
+	public T getResult() {
+		return result;
+	}
+
+	public void setResult(T result) {
+		this.result = result;
 	}
 
 	public boolean isSucceeded() {
@@ -64,18 +56,5 @@ public class FarmResult implements Serializable {
 
 	public void setErrors(ArrayList<FarmError> errors) {
 		this.errors = errors;
-	}
-
-	public Serializable getResult() {
-		return result;
-	}
-
-	public void setResult(Serializable result) {
-		this.result = result;
-	}
-	
-	public void setResult(Serializable result, boolean isSucceeded) {
-		this.isSucceeded = isSucceeded;
-		this.result = result;
 	}
 }

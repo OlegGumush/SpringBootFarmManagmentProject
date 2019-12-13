@@ -12,7 +12,7 @@ public interface IRepository<T extends BaseEntity> {
 	
 	T findById(long id);
 	
-	boolean removeById(long id);
+	T removeById(long id);
 			
 	List<T> findAll();	
 	

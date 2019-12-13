@@ -1,7 +1,7 @@
-package farm.model.group;
+package farm.request_model.group;
 
 import farm.enums.ModelType;
-import farm.model.BaseModel;
+import farm.request_model.BaseModel;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 

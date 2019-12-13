@@ -1,5 +1,7 @@
 package farm.validators.animal;
 
+import java.util.ArrayList;
+
 import org.apache.logging.log4j.util.Strings;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -8,8 +10,8 @@ import farm.bl.AnimalBL;
 import farm.bl.GroupBL;
 import farm.entity.animal.Animal;
 import farm.enums.ErrorType;
-import farm.model.animal.AnimalModel;
-import farm.result.FarmResult;
+import farm.error.FarmError;
+import farm.request_model.animal.AnimalModel;
 
 @Component
 public abstract class AnimalValidator implements IAnimalValidator {
@@ -24,44 +26,42 @@ public abstract class AnimalValidator implements IAnimalValidator {
 	
 	
 	@Override
-	public FarmResult validateCreate(AnimalModel animalModel) {
+	public ArrayList<FarmError> validateCreate(AnimalModel animalModel) {
 				
-		FarmResult result = validateBase(animalModel);
+		 ArrayList<FarmError> errors = validateBase(animalModel);
 		
-		if(!result.isSucceeded()) {
-			return result;
+		if(!errors.isEmpty()) {
+			return errors;
+		
+		} else if(isAnimalExistsByName(animalModel.AnimalName)) {
+			errors.add(new FarmError(ErrorType.AnimalNameAlreadyExists, "AnimalName"));
 		}
 		
-		if(isAnimalExistsByName(animalModel.AnimalName)) {
-			return new FarmResult(ErrorType.AnimalNameAlreadyExists, "AnimalName");
-		}
-		
-		return new FarmResult();
+		return errors;
 	}
 
 	@Override
-	public FarmResult validateUpdate(AnimalModel animalModel, Animal animal) {
+	public ArrayList<FarmError> validateUpdate(AnimalModel animalModel, Animal animal) {
 		
+		 ArrayList<FarmError> errors = validateBase(animalModel);
+
 		if(animal == null) {
-			return new FarmResult(ErrorType.AnimalNotExists);
+			errors.add(new FarmError(ErrorType.AnimalNotExists, "Id"));
+			return errors;
 		}
 		
-		FarmResult result = validateBase(animalModel);
+		errors = validateBase(animalModel);
 		
-		if(!result.isSucceeded()) {
-			return result;
+		if(!errors.isEmpty()) {
+			
+			return errors;
+			
+		} else if(isAnimalExistsByNameExceptId(animalModel.AnimalName, animal.getId())) {
+			
+			errors.add(new FarmError(ErrorType.AnimalNameAlreadyExists, "AnimalName"));
 		}
 		
-		if(isAnimalExistsByNameExceptId(animalModel.AnimalName, animal.getId())) {
-			return new FarmResult(ErrorType.AnimalNameAlreadyExists, "AnimalName");
-		}
-		
-		return new FarmResult();
-	}
-
-	@Override
-	public FarmResult validateDelete(AnimalModel model, Animal animal) {
-		return new FarmResult();
+		return errors;
 	}
 	
 	private boolean isAnimalExistsByName(String animalName) {
@@ -74,29 +74,31 @@ public abstract class AnimalValidator implements IAnimalValidator {
 		return animalBL.isAnimalExistsByNameExceptId(animalName, id);
 	}
 
-	private FarmResult validateBase(AnimalModel animalModel) {
+	private ArrayList<FarmError> validateBase(AnimalModel animalModel) {
+		
+		ArrayList<FarmError> errors = new ArrayList<>();
 		
 		if (animalModel == null) {
-			return new FarmResult(ErrorType.AnimalModelIsEmpty, "AnimalName");
-		}
-		
-		if(Strings.isEmpty(animalModel.AnimalName)) {
 			
-			return new FarmResult(ErrorType.AnimalNameCannotBeEmpty, "AnimalName");
+			errors.add(new FarmError(ErrorType.AnimalModelIsEmpty, "AnimalName"));
+		
+		} else if(Strings.isEmpty(animalModel.AnimalName)) {
+			
+			errors.add(new FarmError(ErrorType.AnimalNameCannotBeEmpty, "AnimalName"));
+			
+		} else if(animalModel.AnimalName.length() > ANIMAL_NAME_MAXIMUM_LENGTH) {
+			
+			errors.add(new FarmError(ErrorType.AnimalNameCannotBeBiggerThanThreshold, "AnimalName"));
+			
+		} else if(animalModel.GroupId == null) {
+			
+			errors.add(new FarmError(ErrorType.GroupIdCannotBeEmpty, "GroupId"));
+			
+		} else if(!groupBL.isGroupExistById(animalModel.GroupId)) {
+			
+			errors.add(new FarmError(ErrorType.GroupNotNotExists, "GroupId"));
 		}
 		
-		if(animalModel.AnimalName.length() > ANIMAL_NAME_MAXIMUM_LENGTH) {
-			return new FarmResult(ErrorType.AnimalNameCannotBeBiggerThanThreshold, "AnimalName");
-		}
-		
-		if(animalModel.GroupId == null) {
-			return new FarmResult(ErrorType.GroupIdCannotBeEmpty, "GroupId");
-		}
-		
-		if(!groupBL.isGroupExistById(animalModel.GroupId)) {
-			return new FarmResult(ErrorType.GroupDoesNotExists, "GroupId");
-		}
-		
-		return new FarmResult();
+		return errors;
 	}
 }

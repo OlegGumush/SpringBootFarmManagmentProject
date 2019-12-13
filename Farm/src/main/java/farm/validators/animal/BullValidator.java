@@ -1,28 +1,30 @@
 package farm.validators.animal;
 
+import java.util.ArrayList;
+
 import org.springframework.stereotype.Component;
 
 import farm.entity.animal.Animal;
 import farm.enums.AnimalSex;
 import farm.enums.ErrorType;
-import farm.model.animal.AnimalModel;
-import farm.result.FarmResult;
+import farm.error.FarmError;
+import farm.request_model.animal.AnimalModel;
 
 @Component
 public class BullValidator extends AnimalValidator {
 
-	public FarmResult validateUpdate(AnimalModel animalModel, Animal animal) {
+	public ArrayList<FarmError> validateUpdate(AnimalModel animalModel, Animal animal) {
 		
-		FarmResult result = super.validateUpdate(animalModel, animal);
+		ArrayList<FarmError> errors = super.validateUpdate(animalModel, animal);
 		
-		if(!result.isSucceeded()) {
-			return result;
+		if(!errors.isEmpty()) {
+			return errors;
 		}
 		
 		if(animal.getAnimalSex().equals(AnimalSex.Female)) {
-			return new FarmResult(ErrorType.CannotUpdateBullWithCowModel);
+			errors.add(new FarmError(ErrorType.CannotUpdateBullWithCowModel));
 		}
 		
-		return new FarmResult();
+		return errors;
 	}
 }

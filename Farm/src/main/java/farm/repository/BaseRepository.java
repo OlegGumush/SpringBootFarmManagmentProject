@@ -36,7 +36,6 @@ public abstract class BaseRepository<T extends BaseEntity> implements IRepositor
 	}
 	
 	@Override
-	@Transactional
 	public T insert(T entity) {
 		
 		entityManager.persist(entity);
@@ -50,21 +49,19 @@ public abstract class BaseRepository<T extends BaseEntity> implements IRepositor
 	}
 
 	@Override
-	@Transactional
-	public boolean removeById(long id) {
+	public T removeById(long id) {
 		
-		T entity = entityManager.find(type, id);
-
+		T entity = entityManager.find(type, id);		
 		if(entity == null) {
-			return false;
+			return null;
 		}
 		
-		entityManager.remove(entity);
-		return true;
+		entity.setRemoved(true);	
+		update(entity);
+		return entity;
 	}
 
 	@Override
-	@Transactional
 	public T update(T entity) {
 		
 		entityManager.merge(entity);

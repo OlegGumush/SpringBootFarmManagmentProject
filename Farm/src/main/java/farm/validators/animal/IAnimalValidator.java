@@ -1,15 +1,15 @@
 package farm.validators.animal;
 
+import java.util.ArrayList;
+
 import farm.entity.animal.Animal;
-import farm.model.animal.AnimalModel;
-import farm.result.FarmResult;
+import farm.error.FarmError;
+import farm.request_model.animal.AnimalModel;
 import farm.validators.IValidator;
 
 public interface IAnimalValidator extends IValidator {
 
-	FarmResult validateCreate(AnimalModel model);
+	ArrayList<FarmError> validateCreate(AnimalModel model);
 	
-	FarmResult validateUpdate(AnimalModel model, Animal animal);
-	
-	FarmResult validateDelete(AnimalModel model, Animal animal);
+	ArrayList<FarmError> validateUpdate(AnimalModel model, Animal animal);
 }

@@ -5,11 +5,9 @@ import org.springframework.stereotype.Component;
 
 import farm.enums.EntityType;
 import farm.exception.FarmException;
-import farm.model.BaseModel;
 import farm.validators.animal.BullValidator;
 import farm.validators.animal.CowValidator;
 import farm.validators.group.GroupValidator;
-import farm.validators.sort.BaseSortValidator;
 
 @Component
 public class ValidatorFactory {
@@ -27,29 +25,17 @@ public class ValidatorFactory {
 		
 	}
 
-	public IValidator getValidator(BaseModel model) {
-		
-		switch (model.type) {
-		case bullModel:
-			return bullValidator;
-		case cowModel:
-			return cowValidator;
-		case groupModel:
-			return groupValidator;
-		default:
-			throw new FarmException("ValidatorFactory cannot find model type " + model.type);
-		}
-	}
-	
-	public IValidator getSortValidator(EntityType entityType) {
+	public IValidator getValidator(EntityType entityType) {
 		
 		switch (entityType) {
-		case Animal:
 		case Bull:
+			return bullValidator;
 		case Cow:
-			return new BaseSortValidator();
+			return cowValidator;
+		case Group:
+			return groupValidator;
 		default:
-			throw new FarmException("ValidatorFactory cannot find entity type " + entityType);
-		}	
+			throw new FarmException("ValidatorFactory cannot find model type " + entityType);
+		}
 	}
 }
