@@ -3,7 +3,7 @@ package farm.entity.animal;
 import javax.persistence.DiscriminatorValue;
 import javax.persistence.Entity;
 
-import farm.enums.AnimalSex;
+import farm.enums.AnimalSexType;
 import farm.enums.AnimalType;
 
 @Entity
@@ -11,6 +11,6 @@ import farm.enums.AnimalType;
 public class Cow extends Animal {
 
 	public Cow() {
-		super(AnimalSex.Female);
+		super(AnimalSexType.Female);
 	}
 }

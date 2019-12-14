@@ -1,7 +1,7 @@
 package farm.response_model.animal;
 
 import farm.entity.animal.Animal;
-import farm.enums.AnimalSex;
+import farm.enums.AnimalSexType;
 import farm.response_model.BaseResponseModel;
 import farm.response_model.group.GroupResponseModel;
 
@@ -9,7 +9,7 @@ public class AnimalResponseModel extends BaseResponseModel {
 
 	public String AnimalName;
 
-	public AnimalSex AnimalSex;
+	public AnimalSexType AnimalSex;
 
 	public GroupResponseModel Group;
 	

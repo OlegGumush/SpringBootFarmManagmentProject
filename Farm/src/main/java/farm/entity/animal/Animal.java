@@ -16,7 +16,7 @@ import javax.validation.constraints.NotNull;
 
 import farm.entity.BaseEntity;
 import farm.entity.group.Group;
-import farm.enums.AnimalSex;
+import farm.enums.AnimalSexType;
 
 @Entity
 @Table(name = "animal")
@@ -24,7 +24,7 @@ import farm.enums.AnimalSex;
 @DiscriminatorColumn(name = "animalType")
 public abstract class Animal extends BaseEntity {
 	
-	public Animal(AnimalSex animalSex) {
+	public Animal(AnimalSexType animalSex) {
 		this.animalSex = animalSex;
 	}
 	
@@ -40,7 +40,7 @@ public abstract class Animal extends BaseEntity {
 	
 	@NotNull
 	@Enumerated(value = EnumType.STRING)
-	private AnimalSex animalSex;
+	private AnimalSexType animalSex;
 
 	public Long getGroupId() {
 		return groupId;
@@ -66,11 +66,11 @@ public abstract class Animal extends BaseEntity {
 		this.animalName = animalName;
 	}
 
-	public AnimalSex getAnimalSex() {
+	public AnimalSexType getAnimalSex() {
 		return animalSex;
 	}
 
-	public void setAnimalSex(AnimalSex animalSex) {
+	public void setAnimalSex(AnimalSexType animalSex) {
 		this.animalSex = animalSex;
 	}
 }

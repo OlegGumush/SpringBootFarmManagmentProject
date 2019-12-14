@@ -1,6 +1,6 @@
 package farm.enums;
 
-public enum AnimalSex {
+public enum AnimalSexType {
 
 	Female(),
 	Male();	

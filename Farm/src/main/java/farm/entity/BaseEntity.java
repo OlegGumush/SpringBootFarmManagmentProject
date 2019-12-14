@@ -10,7 +10,7 @@ import javax.persistence.PrePersist;
 import javax.persistence.PreRemove;
 import javax.persistence.PreUpdate;
 
-import farm.utils.DateTimes;
+import farm.utils.DateTimeUtils;
 
 @MappedSuperclass
 public abstract class BaseEntity implements Serializable {
@@ -63,17 +63,17 @@ public abstract class BaseEntity implements Serializable {
 	
 	@PrePersist
 	public void prePersist() {
-		this.insertedDateTime = DateTimes.EpochSecondsUtcNow();
+		this.insertedDateTime = DateTimeUtils.EpochSecondsUtcNow();
 		this.updatedDateTime = insertedDateTime;
 	}
 	
 	@PreUpdate
 	public void preUpdate() {
-		this.updatedDateTime = DateTimes.EpochSecondsUtcNow();
+		this.updatedDateTime = DateTimeUtils.EpochSecondsUtcNow();
 	}
 	
 	@PreRemove
 	public void preDelete() {
-		this.updatedDateTime = DateTimes.EpochSecondsUtcNow();
+		this.updatedDateTime = DateTimeUtils.EpochSecondsUtcNow();
 	}
 }

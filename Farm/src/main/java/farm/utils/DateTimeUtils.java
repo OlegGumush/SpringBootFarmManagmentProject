@@ -4,9 +4,9 @@ import java.time.Clock;
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
 
-public class DateTimes {
+public class DateTimeUtils {
 
-	public DateTimes() {
+	public DateTimeUtils() {
 	}
 	
 	public static LocalDateTime LocalDateTimeUtcNow() {

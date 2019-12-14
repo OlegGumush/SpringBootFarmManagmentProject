@@ -5,7 +5,7 @@ import java.util.ArrayList;
 import org.springframework.stereotype.Component;
 
 import farm.entity.animal.Animal;
-import farm.enums.AnimalSex;
+import farm.enums.AnimalSexType;
 import farm.enums.ErrorType;
 import farm.error.FarmError;
 import farm.request_model.update_animal.UpdateAnimalModel;
@@ -21,7 +21,7 @@ public class BullValidator extends AnimalValidator {
 			return errors;
 		}
 		
-		if(animal.getAnimalSex().equals(AnimalSex.Female)) {
+		if(animal.getAnimalSex().equals(AnimalSexType.Female)) {
 			errors.add(new FarmError(ErrorType.IdRelatedToCow));
 		}
 		

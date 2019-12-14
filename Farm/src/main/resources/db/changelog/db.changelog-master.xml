@@ -7,5 +7,6 @@
    
    <include file="db/changelog/createAnimalTable-0001.xml"/> 
    <include file="db/changelog/createGroupTable-0002.xml"/> 
+   <include file="db/changelog/createUserTable-0003.xml"/> 
                      
  </databaseChangeLog>

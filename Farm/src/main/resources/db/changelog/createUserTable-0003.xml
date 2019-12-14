@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+	xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.5.xsd">
+	
+	<changeSet author="Oleg.gumush" id="0003">
+	
+		<createTable tableName="user">
+			<column autoIncrement="true" name="id" type="BIGINT">
+				<constraints primaryKey="true" />
+			</column>
+			<column name="inserted_date_time" type="BIGINT" />
+			<column name="updated_date_time" type="BIGINT" />
+			<column name="is_removed" type="BIT(1)"/>
+			<column name="username" type="varchar(20)" />
+			<column name="password" type="varchar(255)" />
+			<column name="role" type="varchar(20)" />
+			<column name="email" type="varchar(50)" />
+			<column name="name" type="varchar(20)" />						
+		</createTable>
+	</changeSet>
+</databaseChangeLog>

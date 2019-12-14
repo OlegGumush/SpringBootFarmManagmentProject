@@ -8,7 +8,7 @@ import javax.transaction.Transactional.TxType;
 import org.springframework.stereotype.Repository;
 
 import farm.entity.animal.Animal;
-import farm.enums.AnimalSex;
+import farm.enums.AnimalSexType;
 import farm.repository.query.Filter;
 import farm.repository.query.SearchParams;
 
@@ -24,7 +24,7 @@ public class AnimalRepository extends BaseRepository<Animal>  {
 	public List<Animal> findAllCows(int page, int size, String orderBy) {
 		
 		SearchParams sp = new SearchParams()
-								.where(Filter.equal("animalSex", AnimalSex.Female));	
+								.where(Filter.equal("animalSex", AnimalSexType.Female));	
 		
 		return findAllWithPageAndOrder(page, size, orderBy, sp);
 	}
@@ -32,7 +32,7 @@ public class AnimalRepository extends BaseRepository<Animal>  {
 	public List<Animal> findAllBulls(int page, int size, String orderBy) {
 		
 		SearchParams sp = new SearchParams()
-								.where(Filter.equal("animalSex", AnimalSex.Male));	
+								.where(Filter.equal("animalSex", AnimalSexType.Male));	
 		
 		return findAllWithPageAndOrder(page, size,orderBy, sp);
 	}
