@@ -33,7 +33,7 @@ public class SwaggerConfig {
 
 		docket.groupName("public-api")
 		.apiInfo(apiInfo())
-        .securitySchemes(Collections.singletonList(apiKey()))
+        .securitySchemes(Collections.singletonList(apiKey())).enable(true)
 		.select().paths(postPaths()).build();
 
 

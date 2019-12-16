@@ -16,3 +16,4 @@ public class GroupResponseModel extends BaseResponseModel {
 		this.GroupNumber = group.getGroupNumber();
 	}
 }
+

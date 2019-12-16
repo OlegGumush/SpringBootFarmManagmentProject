@@ -5,5 +5,6 @@ public enum EntityType {
 	Animal,
 	Bull,
 	Cow,
-	Group
+	Group,
+	User
 }

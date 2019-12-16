@@ -48,7 +48,6 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 	protected void configure(HttpSecurity httpSecurity) throws Exception {
 		httpSecurity.csrf().disable()
 				.authorizeRequests().
-						antMatchers("/authentication").permitAll().
 						antMatchers(AUTH_WHITELIST).permitAll().
 						anyRequest().authenticated().and().
 						exceptionHandling().and().sessionManagement().
@@ -58,8 +57,9 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 	}
 	
     private static final String[] AUTH_WHITELIST = {
-    		"/registration/farmer",
-    		"/registration/admin",
+    		//"/registration/farmer",
+    		//"/registration/admin",
+    		"/login",
             // -- swagger ui
             "/v2/api-docs",
             "/swagger-resources",

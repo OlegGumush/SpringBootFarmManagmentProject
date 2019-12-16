@@ -18,5 +18,14 @@
 			<column name="email" type="varchar(50)" />
 			<column name="name" type="varchar(20)" />						
 		</createTable>
+		
+		<insert tableName="user">
+	       	<column name="username" type="varchar(20)" value="admin"/>
+	       	<column name="password" type="varchar(255)" value="$2a$10$b/LpV7M7RvJ2n4R4Qk1dEuJWa/03pHJiuDyZMQR0LhZp3wkBIUDSG"/>
+	       	<column name="email" type="varchar(50)" value="admin@gmail.com"/>
+	       	<column name="name" type="varchar(20)" value="admin"/>
+	       	<column name="is_removed" type="BIT(1)" valueBoolean="false"/>
+	       	<column name="role" type="varchar(20)" value="ROLE_SYSTEM"/>
+	    </insert>
 	</changeSet>
 </databaseChangeLog>

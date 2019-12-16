@@ -1,7 +1,6 @@
-package farm.request_model.create_animal;
+package farm.request_model.animal;
 
 import farm.enums.ModelType;
-import farm.request_model.BaseAnimalModel;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 

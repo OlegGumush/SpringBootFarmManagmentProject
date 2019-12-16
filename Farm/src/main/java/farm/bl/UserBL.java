@@ -1,9 +1,6 @@
 package farm.bl;
 
-import java.util.ArrayList;
-
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -13,7 +10,7 @@ import org.springframework.stereotype.Service;
 import farm.entity.user.User;
 import farm.enums.RoleType;
 import farm.repository.UserRepository;
-import farm.request_model.BaseUserModel;
+import farm.request_model.user.UserModel;
 import farm.result.FarmResult;
 import farm.security.FarmUserDetails;
 
@@ -36,29 +33,16 @@ public class UserBL implements UserDetailsService {
 		}
 		
 		return new FarmUserDetails(user);
-	}
+	}	
 	
-	public FarmResult<User> createFarmer(BaseUserModel userModel) {
-				
+	public FarmResult<User> createUser(UserModel userModel, RoleType role) {
+		
 		User user = new User();
 		user.setEmail(userModel.Email);
 		user.setPassword(passwordEncoder.encode(userModel.Password));
 		user.setName(userModel.Name);
 		user.setUsername(userModel.Username);
-		user.setRole(RoleType.ROLE_FARMER);
-
-		userRepository.insert(user);
-		return new FarmResult<>(user);
-	}
-	
-	public FarmResult<User> createAdmin(BaseUserModel userModel) {
-				
-		User user = new User();
-		user.setEmail(userModel.Email);
-		user.setPassword(passwordEncoder.encode(userModel.Password));
-		user.setName(userModel.Name);
-		user.setUsername(userModel.Username);
-		user.setRole(RoleType.ROLE_ADMIN);
+		user.setRole(role);
 		
 		userRepository.insert(user);
 		return new FarmResult<>(user);

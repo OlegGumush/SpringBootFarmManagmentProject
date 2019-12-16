@@ -1,10 +1,10 @@
-package farm.request_model;
+package farm.request_model.user;
 
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 
 @ApiModel
-public class BaseUserModel {
+public class UserModel {
 
     @ApiModelProperty(required = true)
 	public String Username;

@@ -17,7 +17,6 @@
 		</createTable>
 		
 	    <insert tableName="animal_group">
-	        <column name="id" type="BIGINT" value="0"/>
 	       	<column name="group_name" type="varchar(20)" value="Default"/>
 	       	<column name="group_number" type="BIGINT" value="0"/>
 	       	<column name="is_removed" type="BIT(1)" valueBoolean="false"/>

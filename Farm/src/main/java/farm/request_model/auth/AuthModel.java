@@ -1,4 +1,4 @@
-package farm.request_model;
+package farm.request_model.auth;
 
 public class AuthModel {
 

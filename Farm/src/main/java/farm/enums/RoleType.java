@@ -2,7 +2,7 @@ package farm.enums;
 
 public enum RoleType {
 
-	SystemUser,
+	ROLE_SYSTEM,
 	ROLE_ADMIN,
-	ROLE_FARMER
+	ROLE_FARMER;
 }

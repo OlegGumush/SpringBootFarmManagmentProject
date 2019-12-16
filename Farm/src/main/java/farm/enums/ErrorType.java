@@ -11,9 +11,6 @@ public enum ErrorType {
 	IdRelatedToCow,
 	IdRelatedToBull,
 	
-	// Sort
-	InvalidSortParameter,
-	
 	// Group
 	GroupNameCannotBeEmpty,
 	GroupNumberCannotBeEmpty,
@@ -23,6 +20,19 @@ public enum ErrorType {
 	GroupNameAlreadyExists,
 	GroupNumberAlreadyExists,
 	GroupIdCannotBeEmpty,
-	GroupNotNotExists
+	GroupNotNotExists,
+	
+	// User
+	UserNotExists,
+	BadCredentials,
+	UserModelIsEmpty,
+	UserNameCannotBeEmpty,
+	UserNameCannotBeBiggerThanThreshold,
+	UserUsernameCannotBeEmpty,
+	UserUsernameCannotBeBiggerThanThreshold,
+	UserEmailCannotBeEmpty,
+	UserEmailCannotBeBiggerThanThreshold,
+	UserPasswordCannotBeEmpty,
+	UserPasswordCannotBeBiggerOrSmallerThanThreshold
 	;
 }

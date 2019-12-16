@@ -8,6 +8,7 @@ import javax.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -22,7 +23,9 @@ import io.swagger.annotations.ApiOperation;
 
 @RestController
 @Transactional
+@CrossOrigin
 public class AnimalController {
+
 
 	@Autowired
 	private AnimalBL animalsBL;
@@ -32,14 +35,13 @@ public class AnimalController {
 	public ResponseEntity<FarmResult<List<AnimalResponseModel>>> getAllAnimals(@RequestParam(name = "page", defaultValue = "0") int page,
 												    @RequestParam(name = "size", defaultValue = "100") int size,
 												    @RequestParam(name = "sort", defaultValue = "insertedDateTime") String orderBy) {
-		
 		try {
 			FarmResult<List<Animal>> result = animalsBL.getAllAnimals(page, size, orderBy);
 			
 			if(!result.isSucceeded()) {
 				return new ResponseEntity<>(new FarmResult<>(result.getErrors()), HttpStatus.BAD_REQUEST);				
 			}
-			
+						
 			List<AnimalResponseModel> animals = result.getResult().stream().map(AnimalResponseModel::new).collect(Collectors.toList());
 			
 			return new ResponseEntity<>(new FarmResult<>(animals), HttpStatus.OK);			

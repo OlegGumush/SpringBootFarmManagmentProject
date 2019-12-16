@@ -6,8 +6,6 @@ import javax.persistence.Enumerated;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-
 import farm.entity.BaseEntity;
 import farm.enums.RoleType;
 
@@ -19,7 +17,6 @@ public class User extends BaseEntity {
     private String username;
 
 	@NotNull
-	@JsonIgnore
     private String password;
     
 	@NotNull

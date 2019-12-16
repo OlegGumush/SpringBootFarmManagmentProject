@@ -8,7 +8,7 @@ import farm.entity.animal.Animal;
 import farm.enums.AnimalSexType;
 import farm.enums.ErrorType;
 import farm.error.FarmError;
-import farm.request_model.update_animal.UpdateAnimalModel;
+import farm.request_model.animal.UpdateAnimalModel;
 
 @Component
 public class CowValidator extends AnimalValidator {

@@ -11,9 +11,9 @@ import farm.bl.GroupBL;
 import farm.entity.animal.Animal;
 import farm.enums.ErrorType;
 import farm.error.FarmError;
-import farm.request_model.BaseAnimalModel;
-import farm.request_model.create_animal.CreateAnimalModel;
-import farm.request_model.update_animal.UpdateAnimalModel;
+import farm.request_model.animal.BaseAnimalModel;
+import farm.request_model.animal.CreateAnimalModel;
+import farm.request_model.animal.UpdateAnimalModel;
 
 @Component
 public abstract class AnimalValidator implements IAnimalValidator {

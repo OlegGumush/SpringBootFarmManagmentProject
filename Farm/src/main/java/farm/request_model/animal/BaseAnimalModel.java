@@ -1,6 +1,7 @@
-package farm.request_model;
+package farm.request_model.animal;
 
 import farm.enums.ModelType;
+import farm.request_model.BaseModel;
 import io.swagger.annotations.ApiModelProperty;
 
 public abstract class BaseAnimalModel extends BaseModel {
