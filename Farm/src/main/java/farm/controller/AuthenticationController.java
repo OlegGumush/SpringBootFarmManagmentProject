@@ -19,7 +19,7 @@ import io.swagger.annotations.ApiOperation;
 
 @RestController
 @Transactional
-@CrossOrigin
+//@CrossOrigin
 public class AuthenticationController {
 	
 	@Autowired

@@ -13,6 +13,8 @@ import com.google.common.base.Predicate;
 import com.google.common.collect.ImmutableList;
 
 import springfox.documentation.builders.ApiInfoBuilder;
+import springfox.documentation.builders.PathSelectors;
+import springfox.documentation.builders.RequestHandlerSelectors;
 import springfox.documentation.builders.ResponseMessageBuilder;
 import springfox.documentation.schema.ModelRef;
 import springfox.documentation.service.ApiInfo;
@@ -32,9 +34,12 @@ public class SwaggerConfig {
 		Docket docket=new Docket(DocumentationType.SWAGGER_2);
 
 		docket.groupName("public-api")
-		.apiInfo(apiInfo())
-        .securitySchemes(Collections.singletonList(apiKey())).enable(true)
-		.select().paths(postPaths()).build();
+			.apiInfo(apiInfo())
+	        .securitySchemes(Collections.singletonList(apiKey()))
+	        .enable(true)
+			.select()
+			.paths(postPaths())
+			.build();
 
 
 		docket.globalResponseMessage(RequestMethod.GET, ImmutableList.of(
@@ -59,7 +64,7 @@ public class SwaggerConfig {
     }
 
 	private Predicate<String> postPaths() {
-		return or(regex("/animals.*"), regex("/cow.*"), regex("/bulls.*"), regex("/groups.*"), regex("/users.*"), regex("/registration.*"));
+		return or(regex("/animals.*"), regex("/cow.*"), regex("/bulls.*"), regex("/groups.*"), regex("/users.*"), regex("/registration.*"), regex("/login.*"));
 	}
 
 	private ApiInfo apiInfo() {

@@ -48,10 +48,13 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 	protected void configure(HttpSecurity httpSecurity) throws Exception {
 		httpSecurity.csrf().disable()
 				.authorizeRequests().
+						//anyRequest().permitAll().
 						antMatchers(AUTH_WHITELIST).permitAll().
-						anyRequest().authenticated().and().
+						anyRequest().authenticated().
+						and().
 						exceptionHandling().and().sessionManagement().
 						sessionCreationPolicy(SessionCreationPolicy.STATELESS);
+		
 		httpSecurity.addFilterBefore(jwtRequestFilter, UsernamePasswordAuthenticationFilter.class);
 
 	}
