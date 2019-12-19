@@ -13,8 +13,6 @@ import com.google.common.base.Predicate;
 import com.google.common.collect.ImmutableList;
 
 import springfox.documentation.builders.ApiInfoBuilder;
-import springfox.documentation.builders.PathSelectors;
-import springfox.documentation.builders.RequestHandlerSelectors;
 import springfox.documentation.builders.ResponseMessageBuilder;
 import springfox.documentation.schema.ModelRef;
 import springfox.documentation.service.ApiInfo;
@@ -64,7 +62,7 @@ public class SwaggerConfig {
     }
 
 	private Predicate<String> postPaths() {
-		return or(regex("/animals.*"), regex("/cow.*"), regex("/bulls.*"), regex("/groups.*"), regex("/users.*"), regex("/registration.*"), regex("/login.*"));
+		return or(regex("/animals.*"), regex("/cow.*"), regex("/bulls.*"), regex("/groups.*"), regex("/users.*"), regex("/user.*"), regex("/login.*"));
 	}
 
 	private ApiInfo apiInfo() {

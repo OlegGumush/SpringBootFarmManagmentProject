@@ -28,4 +28,33 @@ public class UserRepository extends BaseRepository<User>{
 		
 		return users.get(0);
 	}
+
+	public boolean isUserExistsByUsernameExceptId(String username, long id) {
+		SearchParams sp = new SearchParams()
+				.where(Filter.equal("username", username))
+				.where(Filter.notEqual("id", id));
+
+		List<User> result = findAll(sp);
+		
+		if(result.isEmpty()) {
+			return false;
+		}
+		
+		return true;
+	}
+
+	public boolean isUserExistsByEmailExceptId(String email, long id) {
+		SearchParams sp = new SearchParams()
+				.where(Filter.equal("email", email))
+				.where(Filter.notEqual("id", id));
+
+		List<User> result = findAll(sp);
+		
+		if(result.isEmpty()) {
+			return false;
+		}
+		
+		return true;
+	}
+	
 }

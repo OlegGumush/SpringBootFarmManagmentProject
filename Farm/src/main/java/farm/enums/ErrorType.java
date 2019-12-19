@@ -33,6 +33,8 @@ public enum ErrorType {
 	UserEmailCannotBeEmpty,
 	UserEmailCannotBeBiggerThanThreshold,
 	UserPasswordCannotBeEmpty,
-	UserPasswordCannotBeBiggerOrSmallerThanThreshold
+	UserPasswordCannotBeBiggerOrSmallerThanThreshold,
+	UserEmailAlreadyExists,
+	UserUsernameAlreadyExists
 	;
 }

@@ -26,7 +26,6 @@ public abstract class AnimalValidator implements IAnimalValidator {
 	
 	public static final int ANIMAL_NAME_MAXIMUM_LENGTH = 20;
 	
-	
 	@Override
 	public ArrayList<FarmError> validateCreate(CreateAnimalModel animalModel) {
 				

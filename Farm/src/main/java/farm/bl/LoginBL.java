@@ -11,14 +11,14 @@ import org.springframework.stereotype.Service;
 
 import farm.enums.ErrorType;
 import farm.error.FarmError;
-import farm.request_model.auth.AuthModel;
-import farm.response_model.JwtResponse;
+import farm.request_model.login.LoginModel;
+import farm.response_model.jwt.JwtResponse;
 import farm.result.FarmResult;
 import farm.utils.JwtUtils;
 
 @Service
 @Transactional
-public class AuthenticationBL {
+public class LoginBL {
 
 	@Autowired
 	private UserBL userBL;
@@ -29,14 +29,14 @@ public class AuthenticationBL {
 	@Autowired
 	private JwtUtils jwtUtils;
 
-	public FarmResult<JwtResponse> login(AuthModel authModel) {
+	public FarmResult<JwtResponse> login(LoginModel authModel) {
 		
 		try {
-			authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(authModel.getUsername(), authModel.getPassword()));
+			authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(authModel.Username, authModel.Password));
 			UserDetails userDetails = null;
 			
 			try {
-				userDetails = userBL.loadUserByUsername(authModel.getUsername());			
+				userDetails = userBL.loadUserByUsername(authModel.Username);			
 			} catch (UsernameNotFoundException e) {
 				return new FarmResult<>(new FarmError(ErrorType.UserNotExists));
 			}			

@@ -5,32 +5,34 @@ import javax.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
-import farm.bl.AuthenticationBL;
-import farm.request_model.auth.AuthModel;
-import farm.response_model.JwtResponse;
+import farm.bl.LoginBL;
+import farm.request_model.login.LoginModel;
+import farm.response_model.jwt.JwtResponse;
 import farm.result.FarmResult;
 import io.swagger.annotations.ApiOperation;
 
 @RestController
 @Transactional
 //@CrossOrigin
-public class AuthenticationController {
+public class LoginController {
 	
 	@Autowired
-	private AuthenticationBL authenticationBL;
+	private LoginBL loginBL;
 	
 	@RequestMapping(value = "/login", method = RequestMethod.POST)
 	@ApiOperation(value = "Login", notes="notes", nickname = "Login")
-	public ResponseEntity<FarmResult<JwtResponse>> createFarmer(@RequestBody AuthModel authModel) throws Exception{
+	//public ResponseEntity<FarmResult<JwtResponse>> createFarmer(@RequestBody LoginModel authModel, @RequestHeader("Authorization") String language) throws Exception{
+	public ResponseEntity<FarmResult<JwtResponse>> createFarmer(@RequestBody LoginModel authModel) throws Exception{
 		
+		//String encodedString = new String(Base64.getDecoder().decode(language.substring(6).getBytes()));
 		try {
-			FarmResult<JwtResponse> result = authenticationBL.login(authModel);
+			//String [] userPass = encodedString.split(":");
+			FarmResult<JwtResponse> result = loginBL.login(authModel);
 			
 			if (!result.isSucceeded()) {
 				return new ResponseEntity<>(new FarmResult<>(result.getErrors()), HttpStatus.BAD_REQUEST);			
