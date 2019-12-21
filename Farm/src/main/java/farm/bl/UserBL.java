@@ -3,6 +3,7 @@ package farm.bl;
 import java.util.ArrayList;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -10,6 +11,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import farm.entity.user.User;
+import farm.enums.CacheType;
 import farm.enums.EntityType;
 import farm.enums.RoleType;
 import farm.error.FarmError;
@@ -33,6 +35,7 @@ public class UserBL implements UserDetailsService {
 	protected ValidatorFactory validatorFactory;	
 	
 	@Override
+	@Cacheable(value = CacheType.USER_CACHE, key = "#username" )
 	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
 
 		User user = userRepository.findUserByName(username);

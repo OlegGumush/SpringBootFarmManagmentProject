@@ -1,14 +1,19 @@
 package farm.bl;
 
+import static farm.enums.CacheType.OPERATION_FAILED;
+
 import java.util.ArrayList;
 
 import javax.transaction.Transactional;
 import javax.transaction.Transactional.TxType;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CachePut;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
 import farm.entity.group.Group;
+import farm.enums.CacheType;
 import farm.enums.EntityType;
 import farm.error.FarmError;
 import farm.repository.GroupRepository;
@@ -42,12 +47,13 @@ public class GroupBL {
 
 		groupRepository.insert(group);
 		
-		return new FarmResult<Group>(group);
+		return new FarmResult<>(group);
 	}
 
-	public FarmResult<Group> updateGroup(GroupModel groupModel, long id) {
+	@CachePut(value = CacheType.GROUP_CACHE, key = "#groupId", unless = OPERATION_FAILED)
+	public FarmResult<Group> updateGroup(GroupModel groupModel, long groupId) {
 				
-		FarmResult<Group> result = getGroupById(id);
+		FarmResult<Group> result = getGroupById(groupId);
 		Group group = (Group) result.getResult();
 		
 		IGroupValidator groupValidator = (IGroupValidator) validatorFactory.getValidator(EntityType.Group);
@@ -61,18 +67,19 @@ public class GroupBL {
 
 		groupRepository.update(group);
 		
-		return new FarmResult<Group>(group);
+		return new FarmResult<>(group);
 	}
 	
-	public FarmResult<Group> getGroupById(long id) {
+	@Cacheable(value = CacheType.GROUP_CACHE, key = "#groupId", unless = OPERATION_FAILED)
+	public FarmResult<Group> getGroupById(long groupId) {
 				
-		Group group =  groupRepository.findById(id);		
-		return new FarmResult<Group>(group);
+		Group group =  groupRepository.findById(groupId);		
+		return new FarmResult<>(group);
 	}
 
-	public boolean isGroupExistsByNameExceptId(String groupName, long id) {
+	public boolean isGroupExistsByNameExceptId(String groupName, long groupId) {
 		
-		return groupRepository.isGroupExistsByNameExceptId(groupName, id);
+		return groupRepository.isGroupExistsByNameExceptId(groupName, groupId);
 	}
 	
 	public boolean isGroupExistsByName(String groupName) {
@@ -80,9 +87,9 @@ public class GroupBL {
 		return groupRepository.isGroupExistsByNameExceptId(groupName, 0);
 	}
 	
-	public boolean isGroupExistsByNumberExceptId(long animalNumber, long id) {
+	public boolean isGroupExistsByNumberExceptId(long animalNumber, long groupId) {
 		
-		return groupRepository.isGroupExistsByNumberExceptId(animalNumber, id);
+		return groupRepository.isGroupExistsByNumberExceptId(animalNumber, groupId);
 	}
 	
 	public boolean isGroupExistsByNumber(long animalNumber) {
@@ -90,13 +97,13 @@ public class GroupBL {
 		return groupRepository.isGroupExistsByNumberExceptId(animalNumber, 0);
 	}
 	
-	public Group findGroupById(long id) {
+	public Group findGroupById(long groupId) {
 		
-		return groupRepository.findById(id);
+		return groupRepository.findById(groupId);
 	}
 	
-	public boolean isGroupExistById(long id) {
-		return groupRepository.isGroupExistById(id);
+	public boolean isGroupExistById(long groupId) {
+		return groupRepository.isGroupExistById(groupId);
 	}
 	
 	private void setCreateCommonFields(GroupModel groupModel, Group group) {

@@ -1,5 +1,8 @@
 package farm.bl;
 
+import static farm.enums.CacheType.ANIMAL_CACHE;
+import static farm.enums.CacheType.OPERATION_FAILED;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -8,6 +11,9 @@ import javax.transaction.Transactional;
 import javax.transaction.Transactional.TxType;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.CachePut;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
 import farm.entity.animal.Animal;
@@ -46,10 +52,11 @@ public class AnimalBL {
 				
 		return new FarmResult<>(animals);
 	}
-	
-	public FarmResult<Animal> getAnimalById(long id) {
+
+	@Cacheable(value = ANIMAL_CACHE, key = "#animalId", unless = OPERATION_FAILED)
+	public FarmResult<Animal> getAnimalById(long animalId) {
 				
-		Animal animal =  animalRepository.findById(id);
+		Animal animal =  animalRepository.findById(animalId);
 
 		if (animal == null) {
 			return new FarmResult<Animal>(new FarmError(ErrorType.AnimalNotExists));
@@ -58,9 +65,10 @@ public class AnimalBL {
 		return new FarmResult<>(animal);
 	}
 	
-	public FarmResult<Animal> deleteAnimalById(long id) {
+	@CacheEvict(value = ANIMAL_CACHE, key = "#animalId")
+	public FarmResult<Animal> deleteAnimalById(long animalId) {
 		
-		Animal animal = animalRepository.removeById(id);
+		Animal animal = animalRepository.removeById(animalId);
 
 		if (animal == null) {
 			return new FarmResult<Animal>(new FarmError(ErrorType.AnimalNotExists));
@@ -105,9 +113,11 @@ public class AnimalBL {
 		return new FarmResult<>(bull);
 	}
 	
-	public FarmResult<Cow> updateCow(UpdateCowModel cowModel, long id) {
+	@CachePut(value = ANIMAL_CACHE, key = "#animalId", unless = OPERATION_FAILED)
+	public FarmResult<Cow> updateCow(UpdateCowModel cowModel, long animalId) {
 		
-		FarmResult<Animal> result = getAnimalById(id);
+		
+		FarmResult<Animal> result = getAnimalById(animalId);
 		Animal cow = result.getResult();
 		
 		IAnimalValidator animalValidator = (IAnimalValidator) validatorFactory.getValidator(EntityType.Cow);
@@ -124,9 +134,10 @@ public class AnimalBL {
 		return new FarmResult<>((Cow)cow);
 	}
 	
-	public FarmResult<Bull> updateBull(UpdateBullModel bullModel, long id) {
+	@CachePut(value = ANIMAL_CACHE, key = "#animalId", unless = OPERATION_FAILED)
+	public FarmResult<Bull> updateBull(UpdateBullModel bullModel, long animalId) {
 		
-		FarmResult<Animal> result = getAnimalById(id);
+		FarmResult<Animal> result = getAnimalById(animalId);
 		Animal bull = result.getResult();
 		
 		IAnimalValidator animalValidator = (IAnimalValidator) validatorFactory.getValidator(EntityType.Bull);
