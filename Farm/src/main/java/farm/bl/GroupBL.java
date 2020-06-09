@@ -1,19 +1,14 @@
 package farm.bl;
 
-import static farm.enums.CacheType.OPERATION_FAILED;
-
 import java.util.ArrayList;
 
 import javax.transaction.Transactional;
 import javax.transaction.Transactional.TxType;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.cache.annotation.CachePut;
-import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
 import farm.entity.group.Group;
-import farm.enums.CacheType;
 import farm.enums.EntityType;
 import farm.error.FarmError;
 import farm.repository.GroupRepository;
@@ -50,7 +45,6 @@ public class GroupBL {
 		return new FarmResult<>(group);
 	}
 
-	@CachePut(value = CacheType.GROUP_CACHE, key = "#groupId", unless = OPERATION_FAILED)
 	public FarmResult<Group> updateGroup(GroupModel groupModel, long groupId) {
 				
 		FarmResult<Group> result = getGroupById(groupId);
@@ -70,7 +64,6 @@ public class GroupBL {
 		return new FarmResult<>(group);
 	}
 	
-	@Cacheable(value = CacheType.GROUP_CACHE, key = "#groupId", unless = OPERATION_FAILED)
 	public FarmResult<Group> getGroupById(long groupId) {
 				
 		Group group =  groupRepository.findById(groupId);		

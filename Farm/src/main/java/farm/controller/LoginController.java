@@ -26,12 +26,9 @@ public class LoginController {
 	
 	@RequestMapping(value = "/login", method = RequestMethod.POST)
 	@ApiOperation(value = "Login", notes="notes", nickname = "Login")
-	//public ResponseEntity<FarmResult<JwtResponse>> createFarmer(@RequestBody LoginModel authModel, @RequestHeader("Authorization") String language) throws Exception{
 	public ResponseEntity<FarmResult<JwtResponse>> createFarmer(@RequestBody LoginModel authModel) throws Exception{
 		
-		//String encodedString = new String(Base64.getDecoder().decode(language.substring(6).getBytes()));
 		try {
-			//String [] userPass = encodedString.split(":");
 			FarmResult<JwtResponse> result = loginBL.login(authModel);
 			
 			if (!result.isSucceeded()) {

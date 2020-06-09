@@ -1,8 +1,5 @@
 package farm.bl;
 
-import static farm.enums.CacheType.ANIMAL_CACHE;
-import static farm.enums.CacheType.OPERATION_FAILED;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -11,9 +8,6 @@ import javax.transaction.Transactional;
 import javax.transaction.Transactional.TxType;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.cache.annotation.CacheEvict;
-import org.springframework.cache.annotation.CachePut;
-import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
 import farm.entity.animal.Animal;
@@ -53,7 +47,6 @@ public class AnimalBL {
 		return new FarmResult<>(animals);
 	}
 
-	@Cacheable(value = ANIMAL_CACHE, key = "#animalId", unless = OPERATION_FAILED)
 	public FarmResult<Animal> getAnimalById(long animalId) {
 				
 		Animal animal =  animalRepository.findById(animalId);
@@ -65,7 +58,6 @@ public class AnimalBL {
 		return new FarmResult<>(animal);
 	}
 	
-	@CacheEvict(value = ANIMAL_CACHE, key = "#animalId")
 	public FarmResult<Animal> deleteAnimalById(long animalId) {
 		
 		Animal animal = animalRepository.removeById(animalId);
@@ -113,7 +105,6 @@ public class AnimalBL {
 		return new FarmResult<>(bull);
 	}
 	
-	@CachePut(value = ANIMAL_CACHE, key = "#animalId", unless = OPERATION_FAILED)
 	public FarmResult<Cow> updateCow(UpdateCowModel cowModel, long animalId) {
 		
 		
@@ -134,7 +125,6 @@ public class AnimalBL {
 		return new FarmResult<>((Cow)cow);
 	}
 	
-	@CachePut(value = ANIMAL_CACHE, key = "#animalId", unless = OPERATION_FAILED)
 	public FarmResult<Bull> updateBull(UpdateBullModel bullModel, long animalId) {
 		
 		FarmResult<Animal> result = getAnimalById(animalId);
